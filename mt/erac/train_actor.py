@@ -27,9 +27,11 @@ parser.add_argument('--input_feed', action='store_true', help='use input feeding
 parser.add_argument('--seed', type=int, default=1234, help='random seed')
 parser.add_argument('--cuda', action='store_true', help='use CUDA')
 parser.add_argument('--epochs', type=int, default=30, help='upper epoch limit')
-parser.add_argument('--train_bs', type=int, default=50)
-parser.add_argument('--valid_bs', type=int, default=50)
-parser.add_argument('--test_bs', type=int, default=50)
+
+# The three lines below have changed their default values from 50 to 2
+parser.add_argument('--train_bs', type=int, default=2)
+parser.add_argument('--valid_bs', type=int, default=2)
+parser.add_argument('--test_bs', type=int, default=2)
 parser.add_argument('--param_init', type=float, default=0.1, help='Parameters are initialized with U(-param_init, param_init)')
 parser.add_argument('--optim', default='sgd', type=str, help='optimizer to use.')
 parser.add_argument('--lr', type=float, default=0.6, help='initial learning rate')
