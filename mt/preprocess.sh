@@ -17,7 +17,8 @@ TOKENIZER=$SCRIPTS/tokenizer/tokenizer.perl
 LC=$SCRIPTS/tokenizer/lowercase.perl
 CLEAN=$SCRIPTS/training/clean-corpus-n.perl
 
-URL="http://wit3.fbk.eu/archive/2014-01/texts/de/en/de-en.tgz"
+#URL="http://wit3.fbk.eu/archive/2014-01/texts/de/en/de-en.tgz"
+#URL="https://drive.google.com/u/0/uc?id=1GnBarJIbNgEIIDvUyKDtLmv35Qcxg6Ed&export=download"
 GZ=de-en.tgz
 
 if [ ! -d "$SCRIPTS" ]; then
@@ -33,10 +34,14 @@ tmp=prep/tmp
 orig=orig
 
 mkdir -p $orig $tmp $prep
+wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1GnBarJIbNgEIIDvUyKDtLmv35Qcxg6Ed' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1GnBarJIbNgEIIDvUyKDtLmv35Qcxg6Ed" -O 2014-01.tgz && rm -rf /tmp/cookies.txt
+tar zxvf 2014-01.tgz
+mv 2014-01/texts/de/en/$GZ $orig
+
 
 echo "Downloading data from ${URL}..."
 cd $orig
-wget "$URL"
+#wget "$URL"
 
 if [ -f $GZ ]; then
     echo "Data successfully downloaded."
