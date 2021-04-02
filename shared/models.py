@@ -36,7 +36,7 @@ def topK_2d(score):
 
 def select_hid(hid, batch_id, row_id):
     bs, k = row_id.size()
-    new_hid = hid.view(hid.size(0), bs, k, hid.size(2))[:,batch_id.data,row_id.data]
+    new_hid = hid.view(hid.size(0), bs, k, hid.size(2))[:,batch_id.data.long(),row_id.data.long()]
     new_hid = new_hid.view(hid.size(0), bs*k, hid.size(2))
 
     return new_hid
@@ -451,7 +451,7 @@ class Decoder(nn.Module):
                 hid = select_hid(hid, batch_id, top_rowid)
             inp = top_colid.view(1, -1).detach()
 
-            eos_mask = eos_mask.gather(dim=1, index=top_rowid.data) | top_colid.data.eq(self.eos_idx)
+            eos_mask = eos_mask.gather(dim=1, index=torch.tensor(top_rowid.data.int(), dtype=torch.int64)) | top_colid.data.eq(self.eos_idx)
 
             if eos_mask.sum() == bs * k:
                 break

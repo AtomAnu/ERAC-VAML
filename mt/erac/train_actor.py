@@ -155,7 +155,7 @@ def train(epoch):
             logging('| epoch {:3d} | {:4d}/{:4d} batches | lr {:.6f} | ms/batch {:5.1f} | '
                     'loss {:5.2f} | ppl {:8.2f} '.format(
                 epoch, batch, tr_iter.num_batch(), optimizer.param_groups[0]['lr'],
-                elapsed * 1000 / args.log_interval, cur_loss, np.exp(cur_loss)))
+                elapsed * 1000 / args.log_interval, cur_loss.cpu(), np.exp(cur_loss.cpu())))
             start_time = time.time()
             sum_nll, cnt_nll = 0, 0
 
