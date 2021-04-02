@@ -451,7 +451,7 @@ class Decoder(nn.Module):
                 hid = select_hid(hid, batch_id, top_rowid)
             inp = top_colid.view(1, -1).detach()
 
-            eos_mask = eos_mask.gather(dim=1, index=torch.tensor(top_rowid.data.int(), dtype=torch.int64)) | top_colid.data.eq(self.eos_idx)
+            eos_mask = eos_mask.gather(dim=1, index=top_rowid.data.to(torch.int64)) | top_colid.data.eq(self.eos_idx)
 
             if eos_mask.sum() == bs * k:
                 break
@@ -463,9 +463,9 @@ class Decoder(nn.Module):
                 sort_score, sort_idx = torch.sort(top_score, dim=1, descending=True)
                 sort_score, sort_idx = sort_score[:,:n], sort_idx[:,:n]
             else:
-                sort_idx = top_rowids[i+1].gather(dim=1, index=torch.tensor(sort_idx, dtype=torch.int64))
+                sort_idx = top_rowids[i+1].gather(dim=1, index=sort_idx.to(torch.int64))
 
-            token = top_colids[i].gather(dim=1, index=sort_idx)
+            token = top_colids[i].gather(dim=1, index=sort_idx.to(torch.int64))
             tokens.insert(0, token)
 
             logit = logits_k[i][batch_id, sort_idx]
