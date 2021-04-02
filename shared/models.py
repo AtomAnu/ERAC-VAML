@@ -468,13 +468,13 @@ class Decoder(nn.Module):
             token = top_colids[i].gather(dim=1, index=sort_idx.to(torch.int64))
             tokens.insert(0, token)
 
-            logit = logits_k[i][batch_id, sort_idx]
+            logit = logits_k[i][batch_id.long(), sort_idx.long()]
             logits.insert(0, logit)
 
-            log_dist = log_dists_k[i][batch_id, sort_idx]
+            log_dist = log_dists_k[i][batch_id.long(), sort_idx.long()]
             log_probs.insert(0, log_dist)
 
-            rnn_out = rnn_outs_k[i].view(bs, k, self.nhid)[batch_id, sort_idx] # [bs x n x nhid]
+            rnn_out = rnn_outs_k[i].view(bs, k, self.nhid)[batch_id.long(), sort_idx.long()] # [bs x n x nhid]
             rnn_outs.insert(0, rnn_out)
 
         tokens.insert(0, bos)
