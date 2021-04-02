@@ -463,7 +463,7 @@ class Decoder(nn.Module):
                 sort_score, sort_idx = torch.sort(top_score, dim=1, descending=True)
                 sort_score, sort_idx = sort_score[:,:n], sort_idx[:,:n]
             else:
-                sort_idx = top_rowids[i+1].gather(dim=1, index=sort_idx)
+                sort_idx = top_rowids[i+1].gather(dim=1, index=torch.tensor(sort_idx, dtype=torch.int64))
 
             token = top_colids[i].gather(dim=1, index=sort_idx)
             tokens.insert(0, token)
