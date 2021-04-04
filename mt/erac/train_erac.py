@@ -21,9 +21,11 @@ parser.add_argument('--critic_path', required=True, type=str, help='Path to the 
 parser.add_argument('--seed', type=int, default=1234, help='random seed')
 parser.add_argument('--cuda', action='store_true', help='use CUDA')
 parser.add_argument('--epochs', type=int, default=30, help='upper epoch limit')
-parser.add_argument('--train_bs', type=int, default=50)
-parser.add_argument('--valid_bs', type=int, default=50)
-parser.add_argument('--test_bs', type=int, default=50)
+
+# The three lines below have changed their default values from 50 to 2
+parser.add_argument('--train_bs', type=int, default=2)
+parser.add_argument('--valid_bs', type=int, default=2)
+parser.add_argument('--test_bs', type=int, default=2)
 
 parser.add_argument('--optim', default='adam', type=str, help='optimizer to use.')
 parser.add_argument('--act_lr', type=float, default=0.0001, help='initial learning rate')
