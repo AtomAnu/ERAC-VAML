@@ -284,7 +284,7 @@ def evaluate(iterator):
     logging('===> [REF]  {}'.format(vocab['tgt'].convert_to_sent(tgt[1:,vis_idx].contiguous().data.cpu().view(-1), exclude=[tgt_pad_idx, eos_idx])))
     logging('===> [HYP]  {}'.format(vocab['tgt'].convert_to_sent(hyps[1:,vis_idx,0].contiguous().data.cpu().view(-1), exclude=[tgt_pad_idx, eos_idx])))
 
-    ppl = np.exp(sum_nll / cnt_nll)
+    ppl = np.exp(sum_nll.cpu() / cnt_nll)
 
     bleu4, precs, hyplen, reflen = bleu_metric.corpus_bleu()
     bleu = bleu4[0] * 100
