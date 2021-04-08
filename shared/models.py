@@ -160,7 +160,7 @@ class Encoder(nn.Module):
         self.drop_hid = nn.Dropout(droph)
 
     def forward(self, src, hid=None):
-        src_embed = self.embedding(src)
+        src_embed = self.embedding(src.long())
         src_embed = self.drop_emb(src_embed)
 
         lengths = src.data.ne(self.pad_idx).int().sum(0)
