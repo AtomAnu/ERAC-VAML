@@ -230,7 +230,7 @@ def train(epoch):
 
         # optimization
         act_optimizer.zero_grad()
-        print((loss_act + args.mle_coeff * loss_mle).requires_grad)
+        print((loss_act + args.mle_coeff * loss_mle).device)
         (loss_act + args.mle_coeff * loss_mle).backward()
         gnorm_act = nn.utils.clip_grad_norm(actor.parameters(), args.grad_clip)
         act_optimizer.step()
