@@ -138,7 +138,7 @@ def train(epoch):
         log_act_dist = actor(src, tgt)
 
         # MLE loss
-        nll = -log_act_dist.gather(2, tgt[1:].unsqueeze(2)).squeeze(2) * mask
+        nll = -log_act_dist.gather(2, tgt[1:].unsqueeze(2).to(torch.int64)).squeeze(2) * mask
         loss = nll.sum(0).mean()
 
         # accumulate nll for computing perplexity (this is not necessary though)
