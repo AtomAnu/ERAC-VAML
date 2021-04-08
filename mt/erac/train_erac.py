@@ -102,7 +102,7 @@ else:
     tr_iter = data.BucketParallelIterator(train['src'], train['tgt'], args.train_bs, src_pad_idx, tgt_pad_idx, 
                                                      shuffle=True, cuda=args.cuda)
     va_iter = data.BucketParallelIterator(valid['src'], valid['tgt'], args.valid_bs, src_pad_idx, tgt_pad_idx, 
-                                                     shuffle=False, cuda=args.cuda, volatile=True)
+                                                     shuffle=False, cuda=args.cuda, requires_grad=True)
 
     ##### intialize models
     logging('==> Load pretrained critic')
@@ -166,8 +166,8 @@ def train_erac(src, tgt):
     act_log_dist.data.masked_fill_(seq.data[1:].eq(tgt_pad_idx)[:,:,None], 0.)
 
     if args.use_tgtnet:
-        tgt_volatile = Variable(tgt.data, volatile=True)
-        seq_volatile = Variable(seq.data, volatile=True)
+        tgt_volatile = Variable(tgt.data, requires_grad=True)
+        seq_volatile = Variable(seq.data, requires_grad=True)
         Q_all_bar = tgt_critic(tgt_volatile, seq_volatile, out_mode=models.LOGIT)
 
         V_bar = (act_dist.data * (Q_all_bar.data - critic.dec_tau * act_log_dist.data)).sum(2) * mask.data
@@ -334,7 +334,7 @@ actor.flatten_parameters()
 
 test = torch.load(args.save_data + '-test.pt')
 te_iter = data.BucketParallelIterator(test['src'], test['tgt'], args.test_bs, src_pad_idx, tgt_pad_idx, 
-                                      shuffle=False, cuda=args.cuda, volatile=True)
+                                      shuffle=False, cuda=args.cuda, requires_grad=True)
 
 logging('='*89)
 curr_ppl = evaluate(te_iter)
