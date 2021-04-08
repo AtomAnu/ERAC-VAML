@@ -240,7 +240,7 @@ class Decoder(nn.Module):
     def forward(self, tgt, hid, context, pad_mask=None, extra_inp=None, att_out=None, out_mode=LOG_PROB, ret_rnn_out=False, ret_att_out=False):
         tgt_len, bs = tgt.size()[:2]
 
-        tgt_embed = self.embedding(tgt)
+        tgt_embed = self.embedding(tgt.long())
         tgt_embed = self.drop_emb(tgt_embed)
 
         if self.nextra > 0:
@@ -295,10 +295,10 @@ class Decoder(nn.Module):
 
         # create <bos> `inp` and range(k) `batch_id`
         if inp is None:
-            inp = Variable(context.data.new(1, bs*k).long().fill_(self.bos_idx), requires_grad=context.volatile)
+            inp = Variable(context.data.new(1, bs*k).long().fill_(self.bos_idx), requires_grad=context.requires_grad)
         else:
             inp = replicate_k(inp)
-        batch_id = Variable(replicate_k(inp.data.new(range(bs))), requires_grad=context.volatile)
+        batch_id = Variable(replicate_k(inp.data.new(range(bs))), requires_grad=context.requires_grad)
 
         # repeat `hid`, `context`, `pad_mask` for k times
         context, hid, pad_mask = map(replicate_k, [context, hid, pad_mask])
@@ -352,7 +352,7 @@ class Decoder(nn.Module):
 
         # create <bos> `inp`
         if inp is None:
-            inp = Variable(context.data.new(1, bs).long().fill_(self.bos_idx), requires_grad=context.volatile)
+            inp = Variable(context.data.new(1, bs).long().fill_(self.bos_idx), requires_grad=context.requires_grad)
 
         att_out = None
 
@@ -399,10 +399,10 @@ class Decoder(nn.Module):
 
         # create <bos> `inp` and range(k) `batch_id`
         if inp is None:
-            inp = Variable(context.data.new(1, bs*k).long().fill_(self.bos_idx), requires_grad=context.volatile)
+            inp = Variable(context.data.new(1, bs*k).long().fill_(self.bos_idx), requires_grad=context.requires_grad)
         else:
             inp = replicate_k(inp)
-        batch_id = Variable(replicate_k(inp.data.new(range(bs))), requires_grad=context.volatile)
+        batch_id = Variable(replicate_k(inp.data.new(range(bs))), requires_grad=context.requires_grad)
 
         # save a one-step `bos` for constructing the final sequence
         bos = inp.clone().view(bs, k)[:,:n]
@@ -412,7 +412,7 @@ class Decoder(nn.Module):
         att_out = None
 
         # init top score
-        top_score = Variable(context.data.new(bs, k).float().fill_(-float('inf')), requires_grad=context.volatile)
+        top_score = Variable(context.data.new(bs, k).float().fill_(-float('inf')), requires_grad=context.requires_grad)
         top_score.data[:,0].fill_(0)
 
         # init helping structure `pad_prob`, `eos_mask` for variable-length decoding
