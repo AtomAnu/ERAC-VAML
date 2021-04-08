@@ -295,7 +295,7 @@ class Decoder(nn.Module):
 
         # create <bos> `inp` and range(k) `batch_id`
         if inp is None:
-            inp = Variable(context.data.new(1, bs*k).long().fill_(self.bos_idx), requires_grad=context.requires_grad)
+            inp = Variable(context.data.new(1, bs*k).long().fill_(self.bos_idx).float(), requires_grad=context.requires_grad)
         else:
             inp = replicate_k(inp)
         batch_id = Variable(replicate_k(inp.data.new(range(bs))), requires_grad=context.requires_grad)
