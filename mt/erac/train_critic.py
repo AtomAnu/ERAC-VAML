@@ -152,7 +152,7 @@ def train(epoch):
         Q_all = critic(tgt, seq, out_mode=models.LOGIT)
 
         # compute Q(y_{<t}, y_t)
-        Q_mod = Q_all.gather(2, seq[1:].unsqueeze(2)).squeeze(2)
+        Q_mod = Q_all.gather(2, seq[1:].unsqueeze(2).to(torch.int64)).squeeze(2)
 
         # compute V_bar(y_{<t})
         act_log_dist = act_log_dist.data.clone()
