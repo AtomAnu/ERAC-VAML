@@ -247,7 +247,7 @@ class Vocab(object):
 
     def get_sym(self, idx):
         assert 0 <= idx < len(self), 'Index {} out of range'.format(idx)
-        return self.idx2sym[idx]
+        return self.idx2sym[idx.long()]
 
     def get_idx(self, sym):
         return self.sym2idx.get(sym, self.unk_idx)
