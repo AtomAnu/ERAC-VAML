@@ -268,6 +268,8 @@ def evaluate(iterator):
 
         # compute masked nll
         tgt_flat = tgt[1:].view(-1, 1)
+        print(tgt_flat.dtype)
+        print(tgt_flat.ne(tgt_pad_idx).dtype)
         masked_nll = -log_prob.view(-1, ntoken_tgt).gather(1, tgt_flat).masked_select(tgt_flat.ne(tgt_pad_idx))
 
         # accumulate nll
