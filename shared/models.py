@@ -321,7 +321,7 @@ class Decoder(nn.Module):
             log_prob = F.log_softmax(logit / self.tau, dim=-1)
 
             if eos_mask is not None and eos_mask.sum() > 0:
-                log_prob.data.masked_scatter_(eos_mask.unsqueeze(2), pad_prob.expand(eos_mask.sum(), self.ntoken))
+                log_prob.data.masked_scatter_(eos_mask.unsqueeze(2).to(torch.bool), pad_prob.expand(eos_mask.sum(), self.ntoken))
             log_prob = log_prob.view(bs*k, self.ntoken)
 
             # make sure the last token is <eos> if not finished yet

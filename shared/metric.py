@@ -137,7 +137,7 @@ class BLEU(object):
             # [Step 2] : compute ngram coocurrence between hyp and ref ==> `cnt_match`
             o_hr = M_hr.sum(-1)                                                          # [bsz x nhyp x nref x lhyp_n]
             triu_mask = M_hh.new(lhyp_n, lhyp_n).fill_(1).triu(diagonal=1).byte()        # [lhyp_n x lhyp_n]
-            inc_o_hh = M_hh.clone().cumsum(-2).masked_fill_(triu_mask[None,None,:,:], 0) # [bsz x nhyp x   1  x lhyp_n (prefix) x lhyp_n]
+            inc_o_hh = M_hh.clone().cumsum(-2).masked_fill_(triu_mask[None,None,:,:].to(torch.bool), 0) # [bsz x nhyp x   1  x lhyp_n (prefix) x lhyp_n]
             inc_o_hr = o_hr[:,:,:,None,:]                                                # [bsz x nhyp x nref x         1       x lhyp_n]
             inc_o_clip, _ = torch.min(inc_o_hh, inc_o_hr).max(dim=2)                     # [bsz x nhyp x lhyp_n (prefix) x lhyp_n]
             cnt_match = torch.sum(inc_o_clip / (1e-16 + inc_o_hh.squeeze(2)), dim=-1)    # [bsz x nhyp x lhyp_n (prefix)]
