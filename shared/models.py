@@ -432,7 +432,7 @@ class Decoder(nn.Module):
             log_prob = F.log_softmax(logit / self.tau, dim=-1)
 
             if eos_mask is not None and eos_mask.sum() > 0:
-                log_prob.data.masked_scatter_(eos_mask.unsqueeze(2), pad_prob.expand(eos_mask.sum(), self.ntoken))
+                log_prob.data.masked_scatter_(eos_mask.unsqueeze(2).to(torch.bool), pad_prob.expand(eos_mask.sum(), self.ntoken))
 
             score = top_score.unsqueeze(2) + log_prob
 
