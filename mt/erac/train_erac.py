@@ -102,7 +102,7 @@ else:
     tr_iter = data.BucketParallelIterator(train['src'], train['tgt'], args.train_bs, src_pad_idx, tgt_pad_idx, 
                                                      shuffle=True, cuda=args.cuda)
     va_iter = data.BucketParallelIterator(valid['src'], valid['tgt'], args.valid_bs, src_pad_idx, tgt_pad_idx, 
-                                                     shuffle=False, cuda=args.cuda, requires_grad=True)
+                                                     shuffle=False, cuda=args.cuda, volatile=True)
 
     ##### intialize models
     logging('==> Load pretrained critic')
@@ -334,7 +334,7 @@ actor.flatten_parameters()
 
 test = torch.load(args.save_data + '-test.pt')
 te_iter = data.BucketParallelIterator(test['src'], test['tgt'], args.test_bs, src_pad_idx, tgt_pad_idx, 
-                                      shuffle=False, cuda=args.cuda, requires_grad=True)
+                                      shuffle=False, cuda=args.cuda, volatile=True)
 
 logging('='*89)
 curr_ppl = evaluate(te_iter)
