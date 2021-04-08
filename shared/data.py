@@ -56,6 +56,7 @@ class BucketIterator(object):
             batch = batch.cuda()
         
         if self.variable:
+            print(batch.dtype)
             batch = Variable(batch, requires_grad=self.volatile)
 
         return batch
