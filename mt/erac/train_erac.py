@@ -181,7 +181,7 @@ def train_erac(src, tgt):
     Q_hat.data[:-1] += V_bar.data[1:]
 
     # compute TD error : `td_error = Q_hat - Q_mod`
-    td_error = Q_hat - Q_mod.data
+    td_error = Q_hat.data - Q_mod.data
     print(td_error)
 
     # critic loss
