@@ -176,6 +176,7 @@ def train_erac(src, tgt):
 
     # compute target value : `Q_hat(s, a) = r(s, a) + V_bar(s')`
     Q_hat = R.clone()
+    print(Q_hat)
     Q_hat[:-1] += V_bar[1:]
 
     # compute TD error : `td_error = Q_hat - Q_mod`
