@@ -158,9 +158,11 @@ def train_erac(src, tgt):
     ##### Policy evaluation (critic)
     # compute Q value estimated by the critic
     Q_all = critic(tgt, seq, out_mode=models.LOGIT)
+    print(Q_all)
 
     # compute Q(y_{<t}, y_t)
     Q_mod = Q_all.gather(2, seq[1:].unsqueeze(2).to(torch.int64)).squeeze(2)
+    print(Q_mod)
 
     # compute V_bar(y_{<t})
     act_log_dist.data.masked_fill_(seq.data[1:].eq(tgt_pad_idx)[:,:,None], 0.)
