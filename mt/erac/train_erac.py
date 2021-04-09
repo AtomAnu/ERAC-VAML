@@ -131,9 +131,6 @@ else:
     act_optimizer = torch.optim.Adam(actor.parameters(), lr=args.act_lr, betas=(args.act_beta1, 0.999))
     crt_optimizer = torch.optim.Adam(critic.parameters(), lr=args.crt_lr, betas=(args.crt_beta1, 0.999))
 
-    print(actor)
-    print(critic)
-
 ##### training metric related
 bleu_metric = metric.BLEU(4, tgt_pad_idx)
 
@@ -230,6 +227,9 @@ def train(epoch):
         cnt_nll += cnt 
         cnt_word += mask.data.sum()
         cnt_sent += bleu.nelement()
+
+        print(loss_act)
+        print(args.mle_coeff * loss_mle)
 
         # optimization
         act_optimizer.zero_grad()
