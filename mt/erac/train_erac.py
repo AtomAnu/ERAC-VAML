@@ -168,8 +168,8 @@ def train_erac(src, tgt):
     act_log_dist.data.masked_fill_(seq.data[1:].eq(tgt_pad_idx)[:,:,None], 0.)
 
     if args.use_tgtnet:
-        tgt_volatile = torch.tensor(tgt.data, requires_grad=True)
-        seq_volatile = torch.tensor(seq.data, requires_grad=True)
+        tgt_volatile = tgt.data.clone().detach().requires_grad_(True)
+        seq_volatile = seq.data.clone().detach().requires_grad_(True)
         Q_all_bar = tgt_critic(tgt_volatile, seq_volatile, out_mode=models.LOGIT)
 
         V_bar = (act_dist.data * (Q_all_bar.data - critic.dec_tau * act_log_dist.data)).sum(2) * mask.data
