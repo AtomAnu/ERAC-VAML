@@ -178,7 +178,7 @@ def train_erac(src, tgt):
 
     # compute target value : `Q_hat(s, a) = r(s, a) + V_bar(s')`
     Q_hat = torch.tensor(R.clone(), requires_grad=True)
-    Q_hat[:-1] += torch.tensor(V_bar)[1:]
+    Q_hat.data[:-1] += V_bar.data[1:]
 
     # compute TD error : `td_error = Q_hat - Q_mod`
     td_error = Q_hat - Q_mod.data
