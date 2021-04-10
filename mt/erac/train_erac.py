@@ -177,7 +177,7 @@ def train_erac(src, tgt):
         V_bar = (act_dist.data * (Q_all.data - critic.dec_tau * act_log_dist.data)).sum(2) * mask.data
 
     # compute target value : `Q_hat(s, a) = r(s, a) + V_bar(s')`
-    Q_hat = torch.tensor(R.clone(), requires_grad=True)
+    Q_hat = R.clone().detach().requires_grad_(True)
     Q_hat.data[:-1] += V_bar.data[1:]
 
     # compute TD error : `td_error = Q_hat - Q_mod`
@@ -266,7 +266,7 @@ def train(epoch):
                     'ppl {:5.2f} | td error {:.4f} | reward {:.4f} | sent bleu {:6.3f} '.format(
                 epoch, batch, tr_iter.num_batch(), act_optimizer.param_groups[0]['lr'],
                 crt_optimizer.param_groups[0]['lr'], elapsed * 1000 / args.log_interval, 
-                np.exp(sum_nll / cnt_nll), sum_res / cnt_word, sum_rwd / cnt_word, 
+                np.exp(sum_nll.cpu() / cnt_nll.cpu()), sum_res / cnt_word, sum_rwd / cnt_word,
                 sum_bleu / cnt_sent * 100))
             start_time = time.time()
             sum_nll, sum_res, sum_rwd, sum_bleu = 0, 0, 0, 0
