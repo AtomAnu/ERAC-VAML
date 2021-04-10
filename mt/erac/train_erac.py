@@ -158,11 +158,11 @@ def train_erac(src, tgt):
     ##### Policy evaluation (critic)
     # compute Q value estimated by the critic
     Q_all = critic(tgt, seq, out_mode=models.LOGIT)
-    print(Q_all)
+    # print(Q_all)
 
     # compute Q(y_{<t}, y_t)
     Q_mod = Q_all.gather(2, seq[1:].unsqueeze(2).to(torch.int64)).squeeze(2)
-    print(Q_mod)
+    # print(Q_mod)
 
     # compute V_bar(y_{<t})
     act_log_dist.data.masked_fill_(seq.data[1:].eq(tgt_pad_idx)[:,:,None], 0.)
@@ -182,7 +182,7 @@ def train_erac(src, tgt):
 
     # compute TD error : `td_error = Q_hat - Q_mod`
     td_error = Q_hat.data - Q_mod.data
-    print(td_error)
+    # print(td_error)
 
     # critic loss
     loss_crt = -td_error * Q_mod
@@ -231,8 +231,17 @@ def train(epoch):
         cnt_word += mask.data.sum()
         cnt_sent += bleu.nelement()
 
-        print(loss_act)
-        print(args.mle_coeff * loss_mle)
+        print(sum_nll.device)
+        print(sum_rwd.device)
+        print(sum_res.device)
+        print(sum_bleu.device)
+        print(cnt_nll.device)
+        print(cnt_word.device)
+        print(cnt_sent.device)
+
+
+        # print(loss_act)
+        # print(args.mle_coeff * loss_mle)
 
         # optimization
         act_optimizer.zero_grad()
