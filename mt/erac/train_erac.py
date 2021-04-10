@@ -231,15 +231,6 @@ def train(epoch):
         cnt_word += mask.data.sum()
         cnt_sent += bleu.nelement()
 
-        print(sum_nll.device)
-        print(sum_rwd.device)
-        print(sum_res.device)
-        print(sum_bleu.device)
-        print(cnt_nll.device)
-        print(cnt_word.device)
-        print(cnt_sent.device)
-
-
         # print(loss_act)
         # print(args.mle_coeff * loss_mle)
 
