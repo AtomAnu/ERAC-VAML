@@ -4,6 +4,7 @@ import pandas as pd
 import math
 
 bertMaskedLM = BertForMaskedLM.from_pretrained('bert-base-uncased')
+bertMaskedLM.eval()
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 
 def get_score(sentence):
