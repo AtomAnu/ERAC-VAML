@@ -1,4 +1,5 @@
 import torch
+from sklearn.metrics.pairwise import cosine_similarity
 xlmr = torch.hub.load('pytorch/fairseq', 'xlmr.large')
 xlmr.eval()
 
@@ -11,5 +12,4 @@ de_tokens = xlmr.encode(de_sent)
 print(en_tokens.tolist())
 print(de_tokens.tolist())
 
-def cosine_similarity():
-    pass
+print(cosine_similarity(en_tokens.tolist(), de_tokens.tolist()))
