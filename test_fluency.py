@@ -11,8 +11,8 @@ def get_score(sentence):
     tensor_input = torch.tensor([tokenizer.convert_tokens_to_ids(tokenized_input)])
     predictions = bertMaskedLM(tensor_input)
     print(predictions)
-    print(tensor_input.size())
-    print(predictions.size())
+    print(tensor_input.squeeze().size())
+    print(predictions.squeeze().size())
     loss_func = torch.nn.CrossEntropyLoss()
     loss = loss_func(predictions.squeeze(), tensor_input.squeeze()).data
     return math.exp(loss)
