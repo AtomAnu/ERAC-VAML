@@ -1,6 +1,5 @@
 import torch
 from pytorch_pretrained_bert import BertTokenizer, BertForMaskedLM
-import pandas as pd
 import math
 
 bertMaskedLM = BertForMaskedLM.from_pretrained('bert-base-uncased')

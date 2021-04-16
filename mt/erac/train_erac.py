@@ -11,6 +11,7 @@ from torch.autograd import Variable
 
 sys.path.append('../..')
 from shared import data, utils, models, metric
+from pytorch_pretrained_bert import BertTokenizer, BertForMaskedLM
 
 parser = argparse.ArgumentParser(description='train_erac.py')
 parser.add_argument('--save_data', default='../data/iwslt14', type=str, help="Input file for the prepared data")
@@ -53,6 +54,7 @@ parser.add_argument('--test_only', action='store_true', help='only run test eval
 parser.add_argument('--beamsize', type=int, default=5, help='size of the beam used for beam search')
 
 parser.add_argument('--ppl_anneal', action='store_true', help="use perplexity as the learing rate annealing metric")
+parser.add_argument('--use_unsuper_reward', action='store_true', help='use unsupervised reward function')
 
 args = parser.parse_args()
 args.use_tgtnet = not args.no_tgtnet
@@ -131,6 +133,13 @@ else:
     act_optimizer = torch.optim.Adam(actor.parameters(), lr=args.act_lr, betas=(args.act_beta1, 0.999))
     crt_optimizer = torch.optim.Adam(critic.parameters(), lr=args.crt_lr, betas=(args.crt_beta1, 0.999))
 
+    if args.use_unsuper_reward:
+        # for fluency calculation
+        bertMaskedLM = BertForMaskedLM.from_pretrained('bert-base-uncased')
+        tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+        bertMaskedLM.eval()
+
+
 ##### training metric related
 bleu_metric = metric.BLEU(4, tgt_pad_idx)
 
@@ -154,6 +163,7 @@ def train_erac(src, tgt):
     # compute rewards
     ref, hyp = utils.prepare_for_bleu(tgt, seq, eos_idx=eos_idx, pad_idx=tgt_pad_idx, unk_idx=tgt_unk_idx)
     R, bleu = utils.get_rewards(bleu_metric, hyp, ref, return_bleu=True)
+    fluency = utils.get_fluency_scores(bertMaskedLM, tokenizer, hyp)
 
     ##### Policy evaluation (critic)
     # compute Q value estimated by the critic
