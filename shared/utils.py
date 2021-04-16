@@ -87,6 +87,8 @@ def get_fluency_scores(mlm, tokenizer, hyp):
     # return math.exp(loss)
     print(hyp.size())
 
+    return None
+
 def get_adequacy_scores(src, hyp):
     pass
 
