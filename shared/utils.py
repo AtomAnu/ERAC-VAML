@@ -85,7 +85,7 @@ def get_fluency_scores(mlm, tokenizer, hyp):
     # loss_func = torch.nn.CrossEntropyLoss()
     # loss = loss_func(predictions.squeeze(), tensor_input.squeeze()).data
     # return math.exp(loss)
-    print(hyp.size())
+    print(hyp)
 
     return None
 
