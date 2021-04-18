@@ -172,7 +172,7 @@ def train_erac(src, tgt):
 
     print(hyp_sents)
     fluency = utils.get_fluency_scores(bertMaskedLM, tokenizer, hyp_sents)
-    print('Fluency: {}, Size: {}'.format(fluency, fluency.size()))
+    print('Fluency: {}'.format(fluency))
     # hyp_sent = vocab['tgt'].convert_to_sent(hyp.contiguous().data.cpu().view(-1), exclude=[tgt_pad_idx, eos_idx])
     # print(hyp_sent)
 
