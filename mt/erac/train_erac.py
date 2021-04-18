@@ -165,7 +165,7 @@ def train_erac(src, tgt):
     R, bleu = utils.get_rewards(bleu_metric, hyp, ref, return_bleu=True)
     # fluency = utils.get_fluency_scores(bertMaskedLM, tokenizer, hyp)
     print(hyp.size())
-    hyp_sent = vocab['tgt'].convert_to_sent(hyp[0,:,:].contiguous().data.cpu().view(-1), exclude=[tgt_pad_idx, eos_idx])
+    hyp_sent = vocab['tgt'].convert_to_sent(hyp.contiguous().data.cpu().view(-1), exclude=[tgt_pad_idx, eos_idx])
     print(hyp_sent)
 
     ##### Policy evaluation (critic)
