@@ -15,7 +15,7 @@ def get_score(sentence):
     print(predictions.squeeze().size())
     loss_func = torch.nn.CrossEntropyLoss()
     loss = loss_func(predictions.squeeze(), tensor_input.squeeze()).data
-    return math.exp(loss)
+    return 1/math.exp(loss)
 
 sample_inputs = ['I just want to go to sleep',
                  'I just want to go to cow',
