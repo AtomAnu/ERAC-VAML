@@ -163,7 +163,10 @@ def train_erac(src, tgt):
     # compute rewards
     ref, hyp = utils.prepare_for_bleu(tgt, seq, eos_idx=eos_idx, pad_idx=tgt_pad_idx, unk_idx=tgt_unk_idx)
     R, bleu = utils.get_rewards(bleu_metric, hyp, ref, return_bleu=True)
-    fluency = utils.get_fluency_scores(bertMaskedLM, tokenizer, hyp)
+    # fluency = utils.get_fluency_scores(bertMaskedLM, tokenizer, hyp)
+    print(hyp.size())
+    hyp_sent = vocab['tgt'].convert_to_sent(hyp[0,:,:].contiguous().data.cpu().view(-1), exclude=[tgt_pad_idx, eos_idx])
+    print(hyp_sent)
 
     ##### Policy evaluation (critic)
     # compute Q value estimated by the critic
