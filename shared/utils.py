@@ -75,19 +75,21 @@ def get_rewards(bleu_metric, hyp, ref, return_bleu=False, scale_reward=True):
     else:
         return R
 
-def get_fluency_scores(mlm, tokenizer, hyp):
-    # tokenized_input = tokenizer.tokenize(sentence)
-    # tensor_input = torch.tensor([tokenizer.convert_tokens_to_ids(tokenized_input)])
-    # predictions = bertMaskedLM(tensor_input)
-    # print(predictions)
-    # print(tensor_input.squeeze().size())
-    # print(predictions.squeeze().size())
-    # loss_func = torch.nn.CrossEntropyLoss()
-    # loss = loss_func(predictions.squeeze(), tensor_input.squeeze()).data
-    # return math.exp(loss)
-    print(hyp)
+def get_fluency_scores(mlm, tokenizer, hyp_sents):
+    fluency_scores = []
+    for sent in hyp_sents:
+        print('Sentence: {}'.format(sent))
+        tokenized_input = tokenizer.tokenize(sent)
+        tensor_input = torch.tensor([tokenizer.convert_tokens_to_ids(tokenized_input)])
+        predictions = mlm(tensor_input)
+        print(predictions)
+        print(tensor_input.squeeze().size())
+        print(predictions.squeeze().size())
+        loss_func = torch.nn.CrossEntropyLoss()
+        loss = loss_func(predictions.squeeze(), tensor_input.squeeze()).data
+        fluency_scores.append(np.exp(loss))
 
-    return None
+    return fluency_scores
 
 def get_adequacy_scores(src, hyp):
     pass

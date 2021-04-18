@@ -164,8 +164,15 @@ def train_erac(src, tgt):
     ref, hyp = utils.prepare_for_bleu(tgt, seq, eos_idx=eos_idx, pad_idx=tgt_pad_idx, unk_idx=tgt_unk_idx)
     R, bleu = utils.get_rewards(bleu_metric, hyp, ref, return_bleu=True)
     print('Hyp shape: {} | Ref shape: {} | Reward shape: {}'.format(hyp.size(),ref.size(),R.size()))
-    # fluency = utils.get_fluency_scores(bertMaskedLM, tokenizer, hyp)
-    # print(hyp.size())
+
+    hyp_sents = []
+    for sent in hyp:
+        hyp_sent = vocab['tgt'].convert_to_sent(sent.contiguous().data.cpu().view(-1), exclude=[tgt_pad_idx, eos_idx])
+        hyp_sents.append(hyp_sent)
+
+    print(hyp_sents)
+    fluency = utils.get_fluency_scores(bertMaskedLM, tokenizer, hyp_sents)
+    print('Fluency: {}, Size: {}'.format(fluency, fluency.size()))
     # hyp_sent = vocab['tgt'].convert_to_sent(hyp.contiguous().data.cpu().view(-1), exclude=[tgt_pad_idx, eos_idx])
     # print(hyp_sent)
 
