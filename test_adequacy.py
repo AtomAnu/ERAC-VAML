@@ -61,7 +61,7 @@ model.load_state_dict(reloaded['model'])
 # ]
 
 # sentences = ['I am happy', 'Ich bin fröhlich']
-sentences = ['Cat', 'Schwein']
+sentences = ['I am happy', 'Dieser Kuchen ist köstlich']
 
 codes_path = 'codes_xnli_100'
 vocab_path = 'vocab_xnli_100'
