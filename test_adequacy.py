@@ -4,6 +4,7 @@ import torch
 from xlm.utils import AttrDict
 from xlm.data.dictionary import Dictionary, BOS_WORD, EOS_WORD, PAD_WORD, UNK_WORD, MASK_WORD
 from xlm.model.transformer import TransformerModel
+import fastBPE
 
 # from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
@@ -44,28 +45,8 @@ model.load_state_dict(reloaded['model'])
 
 # Below is one way to bpe-ize sentences
 # codes = "codes_xnli_100 vocab_xnli_100"  # path to the codes of the model
-codes = "codes_xnli_100"  # path to the codes of the model
-fastbpe = os.path.join(os.getcwd(), 'tools/fastBPE/fast')
-
-
-def to_bpe(sentences):
-    # write sentences to tmp file
-    with open('/tmp/sentences.txt', 'w') as fwrite:
-        for sent in sentences:
-            fwrite.write(sent + '\n')
-
-    # apply bpe to tmp file
-    os.system('%s applybpe /tmp/sentences.txt /tmp/sentences.txt %s' % (fastbpe, codes))
-
-    # load bpe-ized sentences
-    sentences_bpe = []
-    with open('/tmp/sentences.txt') as f:
-        for line in f:
-            sentences_bpe.append(line.rstrip())
-
-    return sentences_bpe
-
-# Below are already BPE-ized sentences
+# codes = "codes_xnli_100"  # path to the codes of the model
+# fastbpe = os.path.join(os.getcwd(), 'tools/fastBPE/fast')
 
 # list of (sentences, lang)
 sentences = [
@@ -75,31 +56,56 @@ sentences = [
     'Nach dem Zweiten Weltkrieg verbreitete sich Bonsai als Hobby in der ganzen Welt .', # de
 ]
 
-# bpe-ize sentences
-sentences = to_bpe(sentences)
-print('\n\n'.join(sentences))
+codes_path = 'codes_xnli_100'
+vocab_path = 'vocab_xnli_100'
 
-# check how many tokens are OOV
-n_w = len([w for w in ' '.join(sentences).split()])
-n_oov = len([w for w in ' '.join(sentences).split() if w not in dico.word2id])
-print('Number of out-of-vocab words: %s/%s' % (n_oov, n_w))
+bpe = fastBPE.fastBPE(codes_path, vocab_path)
+print(bpe.apply(sentences))
 
-# add </s> sentence delimiters
-sentences = [(('</s> %s </s>' % sent.strip()).split()) for sent in sentences]
+# def to_bpe(sentences):
+#     # write sentences to tmp file
+#     with open('/tmp/sentences.txt', 'w') as fwrite:
+#         for sent in sentences:
+#             fwrite.write(sent + '\n')
+#
+#     # apply bpe to tmp file
+#     os.system('%s applybpe /tmp/sentences.txt /tmp/sentences.txt %s' % (fastbpe, codes))
+#
+#     # load bpe-ized sentences
+#     sentences_bpe = []
+#     with open('/tmp/sentences.txt') as f:
+#         for line in f:
+#             sentences_bpe.append(line.rstrip())
+#
+#     return sentences_bpe
 
-bs = len(sentences)
-slen = max([len(sent) for sent in sentences])
+# Below are already BPE-ized sentences
 
-word_ids = torch.LongTensor(slen, bs).fill_(params.pad_index)
-for i in range(len(sentences)):
-    sent = torch.LongTensor([dico.index(w) for w in sentences[i]])
-    word_ids[:len(sent), i] = sent
-
-lengths = torch.LongTensor([len(sent) for sent in sentences])
-
-# NOTE: No more language id (removed it in a later version)
-# langs = torch.LongTensor([params.lang2id[lang] for _, lang in sentences]).unsqueeze(0).expand(slen, bs) if params.n_langs > 1 else None
-langs = None
-
-tensor = model('fwd', x=word_ids, lengths=lengths, langs=langs, causal=False).contiguous()
-print(tensor.size())
+# # bpe-ize sentences
+# sentences = to_bpe(sentences)
+# print('\n\n'.join(sentences))
+#
+# # check how many tokens are OOV
+# n_w = len([w for w in ' '.join(sentences).split()])
+# n_oov = len([w for w in ' '.join(sentences).split() if w not in dico.word2id])
+# print('Number of out-of-vocab words: %s/%s' % (n_oov, n_w))
+#
+# # add </s> sentence delimiters
+# sentences = [(('</s> %s </s>' % sent.strip()).split()) for sent in sentences]
+#
+# bs = len(sentences)
+# slen = max([len(sent) for sent in sentences])
+#
+# word_ids = torch.LongTensor(slen, bs).fill_(params.pad_index)
+# for i in range(len(sentences)):
+#     sent = torch.LongTensor([dico.index(w) for w in sentences[i]])
+#     word_ids[:len(sent), i] = sent
+#
+# lengths = torch.LongTensor([len(sent) for sent in sentences])
+#
+# # NOTE: No more language id (removed it in a later version)
+# # langs = torch.LongTensor([params.lang2id[lang] for _, lang in sentences]).unsqueeze(0).expand(slen, bs) if params.n_langs > 1 else None
+# langs = None
+#
+# tensor = model('fwd', x=word_ids, lengths=lengths, langs=langs, causal=False).contiguous()
+# print(tensor.size())
