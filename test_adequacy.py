@@ -60,8 +60,8 @@ model.load_state_dict(reloaded['model'])
 #     '羅伯特 · 皮爾 斯 生於 1863年 , 在 英國 曼徹斯特 學習 而 成為 一 位 工程師 . 1933年 , 皮爾斯 在 直布羅陀去世 .', # zh
 # ]
 
-sentences = ['I am happy', 'Ich bin fröhlich']
-# sentences = ['I am happy', 'Dieser Kuchen ist köstlich']
+# sentences = ['I am happy', 'Ich bin fröhlich']
+sentences = ['I am happy', 'once he had worn trendy italian leather shoes and jeans from paris that had cost three hundred euros .']
 
 codes_path = 'codes_xnli_100'
 vocab_path = 'vocab_xnli_100'
@@ -123,5 +123,5 @@ en_tensor = embeddings[0].unsqueeze(0)
 de_tensor = embeddings[1].unsqueeze(0)
 
 cos = nn.CosineSimilarity()
-sim = cos(en_tensor, en_tensor)
+sim = cos(en_tensor, de_tensor)
 print(sim)
