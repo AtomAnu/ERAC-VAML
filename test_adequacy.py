@@ -60,7 +60,7 @@ model.load_state_dict(reloaded['model'])
 #     '羅伯特 · 皮爾 斯 生於 1863年 , 在 英國 曼徹斯特 學習 而 成為 一 位 工程師 . 1933年 , 皮爾斯 在 直布羅陀去世 .', # zh
 # ]
 
-sentences = ['Hello World!', 'Hallo Welt!']
+sentences = ['I am happy', 'Ich bin fröhlich']
 
 codes_path = 'codes_xnli_100'
 vocab_path = 'vocab_xnli_100'
