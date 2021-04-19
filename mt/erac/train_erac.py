@@ -12,6 +12,10 @@ from torch.autograd import Variable
 sys.path.append('../..')
 from shared import data, utils, models, metric
 from pytorch_pretrained_bert import OpenAIGPTTokenizer, OpenAIGPTModel, OpenAIGPTLMHeadModel
+from xlm.utils import AttrDict
+from xlm.data.dictionary import Dictionary, BOS_WORD, EOS_WORD, PAD_WORD, UNK_WORD, MASK_WORD
+from xlm.model.transformer import TransformerModel
+import fastBPE
 
 parser = argparse.ArgumentParser(description='train_erac.py')
 parser.add_argument('--save_data', default='../data/iwslt14', type=str, help="Input file for the prepared data")
@@ -140,6 +144,27 @@ else:
         GPTLM.eval()
         # load pre-trained model tokenizer (vocabulary)
         tokenizer = OpenAIGPTTokenizer.from_pretrained('openai-gpt')
+
+        ##### for semantic adequacy calculation
+        # reload a pre-trained xlm model
+        XLM_path = 'mlm_100_1280.pth'
+        reloaded = torch.load(XLM_path)
+        params = AttrDict(reloaded['params'])
+        print("Supported languages: %s" % ", ".join(params.lang2id.keys()))
+
+        # build dictionary
+        dico = Dictionary(reloaded['dico_id2word'], reloaded['dico_word2id'], reloaded['dico_counts'])
+        params.n_words = len(dico)
+        params.bos_index = dico.index(BOS_WORD)
+        params.eos_index = dico.index(EOS_WORD)
+        params.pad_index = dico.index(PAD_WORD)
+        params.unk_index = dico.index(UNK_WORD)
+        params.mask_index = dico.index(MASK_WORD)
+
+        # build model
+        XLM = TransformerModel(params, dico, True, True)
+        XLM.eval()
+        XLM.load_state_dict(reloaded['model'])
 
 
 ##### training metric related
@@ -307,6 +332,8 @@ def evaluate(iterator):
         ref, hyp = utils.prepare_for_bleu(tgt, hyps, eos_idx=eos_idx, pad_idx=tgt_pad_idx, unk_idx=tgt_unk_idx, exclude_unk=True)
         bleu_metric.add_to_corpus(hyp, ref)
 
+    print(src.size())
+    print(hyps.size())
     # sanity check
     vis_idx = np.random.randint(0, tgt.size(1))
     logging('===> [SRC]  {}'.format(vocab['src'].convert_to_sent(src[:,vis_idx].contiguous().data.cpu().view(-1), exclude=[src_pad_idx])))
