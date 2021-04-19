@@ -27,7 +27,7 @@ model = TransformerModel(params, dico, True, True)
 model.eval()
 model.load_state_dict(reloaded['model'])
 
-sentences = ['I am happy', 'Ich bin fröhlich']
+sentences = ['I am happy', 'Ich heiße Atom']
 
 codes_path = 'codes_xnli_100'
 vocab_path = 'vocab_xnli_100'
