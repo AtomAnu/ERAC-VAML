@@ -13,7 +13,7 @@ import numpy as np
 # xlmr.eval()
 
 # en_sent = 'Hello World!'
-# de_sent = 'Hallo Welt! Jungs'
+# de_sent = 'Hallo Welt!'
 
 # en_tokens = xlmr.encode(en_sent)
 # de_tokens = xlmr.encode(de_sent)
@@ -50,14 +50,16 @@ model.load_state_dict(reloaded['model'])
 
 
 # list of (sentences, lang)
-sentences = [
-    'once he had worn trendy italian leather shoes and jeans from paris that had cost three hundred euros .', # en
-    'Le français est la seule langue étrangère proposée dans le système éducatif .', # fr
-    'El cadmio produce efectos tóxicos en los organismos vivos , aun en concentraciones muy pequeñas .', # es
-    'Nach dem Zweiten Weltkrieg verbreitete sich Bonsai als Hobby in der ganzen Welt .', # de
-    'وقد فاز في الانتخابات في الجولة الثانية من التصويت من قبل سيدي ولد الشيخ عبد الله ، مع أحمد ولد داداه في المرتبة الثانية .', # ar
-    '羅伯特 · 皮爾 斯 生於 1863年 , 在 英國 曼徹斯特 學習 而 成為 一 位 工程師 . 1933年 , 皮爾斯 在 直布羅陀去世 .', # zh
-]
+# sentences = [
+#     'once he had worn trendy italian leather shoes and jeans from paris that had cost three hundred euros .', # en
+#     'Le français est la seule langue étrangère proposée dans le système éducatif .', # fr
+#     'El cadmio produce efectos tóxicos en los organismos vivos , aun en concentraciones muy pequeñas .', # es
+#     'Nach dem Zweiten Weltkrieg verbreitete sich Bonsai als Hobby in der ganzen Welt .', # de
+#     'وقد فاز في الانتخابات في الجولة الثانية من التصويت من قبل سيدي ولد الشيخ عبد الله ، مع أحمد ولد داداه في المرتبة الثانية .', # ar
+#     '羅伯特 · 皮爾 斯 生於 1863年 , 在 英國 曼徹斯特 學習 而 成為 一 位 工程師 . 1933年 , 皮爾斯 在 直布羅陀去世 .', # zh
+# ]
+
+sentences = ['Hello World!', 'Hallo Welt!']
 
 codes_path = 'codes_xnli_100'
 vocab_path = 'vocab_xnli_100'
