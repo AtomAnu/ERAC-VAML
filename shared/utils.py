@@ -88,8 +88,36 @@ def get_fluency_scores(lm, tokenizer, hyp_sents):
 
     return fluency_scores
 
-def get_adequacy_scores(src, hyp):
-    pass
+def get_adequacy_scores(xlm, bpe, dico, params, cos_sim, src_sents, hyp_sents):
+    adequacy_scores = []
+    for src_sent, hyp_sent in zip(src_sents, hyp_sents):
+        src_hyp_pair = [src_sent, hyp_sent]
+        sentences = bpe.apply(src_hyp_pair)
+
+        # add </s> sentence delimiters
+        sentences = [(('</s> %s </s>' % sent.strip()).split()) for sent in sentences]
+
+        bs = len(sentences)
+        slen = max([len(sent) for sent in sentences])
+
+        word_ids = torch.LongTensor(slen, bs).fill_(params.pad_index)
+        for i in range(len(sentences)):
+            sent = torch.LongTensor([dico.index(w) for w in sentences[i]])
+            word_ids[:len(sent), i] = sent
+
+        lengths = torch.LongTensor([len(sent) for sent in sentences])
+
+        langs = None
+
+        tensor = xlm('fwd', x=word_ids, lengths=lengths, langs=langs, causal=False).contiguous()
+
+        embeddings = tensor[0]
+        en_tensor = embeddings[0].unsqueeze(0)
+        de_tensor = embeddings[1].unsqueeze(0)
+
+        similarity = cos_sim(en_tensor, de_tensor)
+        adequacy_scores.append(similarity)
+    return adequacy_scores
 
 def log_sum_exp(x, dim=-1, keepdim=False):
     max_x = x.max(dim=dim, keepdim=True)[0]

@@ -166,6 +166,14 @@ else:
         XLM.eval()
         XLM.load_state_dict(reloaded['model'])
 
+        # paths for BPE codes and vocabs
+        codes_path = '../../codes_xnli_100'
+        vocab_path = '../../vocab_xnli_100'
+        bpe = fastBPE.fastBPE(codes_path, vocab_path)
+
+        # cosine similarity model
+        cos_sim = nn.CosineSimilarity()
+
 
 ##### training metric related
 bleu_metric = metric.BLEU(4, tgt_pad_idx)
@@ -192,14 +200,22 @@ def train_erac(src, tgt):
     R, bleu = utils.get_rewards(bleu_metric, hyp, ref, return_bleu=True)
     print('Src shape: {} | Hyp shape: {} | Ref shape: {} | Reward shape: {}'.format(src.size(),hyp.size(),ref.size(),R.size()))
 
+    src_sents = []
     hyp_sents = []
-    for sent in hyp:
-        hyp_sent = vocab['tgt'].convert_to_sent(sent.contiguous().data.cpu().view(-1), exclude=[tgt_pad_idx, eos_idx])
+    for src_sent, hyp_sent in zip(src.permute(1,0),hyp):
+        src_sent = vocab['src'].convert_to_sent(src_sent.contiguous().data.cpu().view(-1), exclude=[src_pad_idx])
+        hyp_sent = vocab['tgt'].convert_to_sent(hyp_sent.contiguous().data.cpu().view(-1), exclude=[tgt_pad_idx, eos_idx])
+        src_sents.append(src_sent)
         hyp_sents.append(hyp_sent)
 
-    print(hyp_sents)
+    print('Src Sents: {}'.format(src_sents))
+    print('Hyp Sents: {}'.format(hyp_sents))
+
     fluency = utils.get_fluency_scores(GPTLM, tokenizer, hyp_sents)
     print('Fluency: {}'.format(fluency))
+
+    adequacy = utils.get_adequacy_scores(XLM, bpe, dico, params, cos_sim, src_sents, hyp_sents)
+    print('Adequacy: {}'.format(adequacy))
 
     ##### Policy evaluation (critic)
     # compute Q value estimated by the critic
@@ -331,9 +347,7 @@ def evaluate(iterator):
         # pytorch_bleu requires size [bsz x nref|nhyp x seqlen]
         ref, hyp = utils.prepare_for_bleu(tgt, hyps, eos_idx=eos_idx, pad_idx=tgt_pad_idx, unk_idx=tgt_unk_idx, exclude_unk=True)
         bleu_metric.add_to_corpus(hyp, ref)
-    print('Evaluation')
-    print(src.size())
-    print(hyps.size())
+
     # sanity check
     vis_idx = np.random.randint(0, tgt.size(1))
     logging('===> [SRC]  {}'.format(vocab['src'].convert_to_sent(src[:,vis_idx].contiguous().data.cpu().view(-1), exclude=[src_pad_idx])))
