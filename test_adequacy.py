@@ -60,7 +60,7 @@ codes_path = 'codes_xnli_100'
 vocab_path = 'vocab_xnli_100'
 
 bpe = fastBPE.fastBPE(codes_path, vocab_path)
-print(bpe.apply(sentences))
+sentences = bpe.apply(sentences)
 
 # def to_bpe(sentences):
 #     # write sentences to tmp file
@@ -92,20 +92,20 @@ print(bpe.apply(sentences))
 #
 # # add </s> sentence delimiters
 # sentences = [(('</s> %s </s>' % sent.strip()).split()) for sent in sentences]
-#
-# bs = len(sentences)
-# slen = max([len(sent) for sent in sentences])
-#
-# word_ids = torch.LongTensor(slen, bs).fill_(params.pad_index)
-# for i in range(len(sentences)):
-#     sent = torch.LongTensor([dico.index(w) for w in sentences[i]])
-#     word_ids[:len(sent), i] = sent
-#
-# lengths = torch.LongTensor([len(sent) for sent in sentences])
-#
-# # NOTE: No more language id (removed it in a later version)
-# # langs = torch.LongTensor([params.lang2id[lang] for _, lang in sentences]).unsqueeze(0).expand(slen, bs) if params.n_langs > 1 else None
-# langs = None
-#
-# tensor = model('fwd', x=word_ids, lengths=lengths, langs=langs, causal=False).contiguous()
-# print(tensor.size())
+
+bs = len(sentences)
+slen = max([len(sent) for sent in sentences])
+
+word_ids = torch.LongTensor(slen, bs).fill_(params.pad_index)
+for i in range(len(sentences)):
+    sent = torch.LongTensor([dico.index(w) for w in sentences[i]])
+    word_ids[:len(sent), i] = sent
+
+lengths = torch.LongTensor([len(sent) for sent in sentences])
+
+# NOTE: No more language id (removed it in a later version)
+# langs = torch.LongTensor([params.lang2id[lang] for _, lang in sentences]).unsqueeze(0).expand(slen, bs) if params.n_langs > 1 else None
+langs = None
+
+tensor = model('fwd', x=word_ids, lengths=lengths, langs=langs, causal=False).contiguous()
+print(tensor.size())
