@@ -112,3 +112,4 @@ langs = None
 
 tensor = model('fwd', x=word_ids, lengths=lengths, langs=langs, causal=False).contiguous()
 print(tensor.size())
+print(tensor[0].size())
