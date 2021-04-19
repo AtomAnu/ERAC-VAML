@@ -7,23 +7,6 @@ from xlm.data.dictionary import Dictionary, BOS_WORD, EOS_WORD, PAD_WORD, UNK_WO
 from xlm.model.transformer import TransformerModel
 import fastBPE
 
-# from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
-
-# xlmr = torch.hub.load('pytorch/fairseq', 'xlmr.large')
-# xlmr.eval()
-
-# en_sent = 'Hello World!'
-# de_sent = 'Hallo Welt!'
-
-# en_tokens = xlmr.encode(en_sent)
-# de_tokens = xlmr.encode(de_sent)
-#
-# en_features = xlmr.extract_features(en_tokens)
-# de_features = xlmr.extract_features(de_tokens)
-#
-# print(cosine_similarity(np.array(en_tokens.tolist()).reshape(1, -1), np.array(de_tokens.tolist()).reshape(1, -1)))
-
 # Reload a pre-trained model
 model_path = 'mlm_100_1280.pth'
 reloaded = torch.load(model_path)
@@ -44,23 +27,6 @@ model = TransformerModel(params, dico, True, True)
 model.eval()
 model.load_state_dict(reloaded['model'])
 
-# Below is one way to bpe-ize sentences
-# codes = "codes_xnli_100 vocab_xnli_100"  # path to the codes of the model
-# codes = "codes_xnli_100"  # path to the codes of the model
-# fastbpe = os.path.join(os.getcwd(), 'tools/fastBPE/fast')
-
-
-# list of (sentences, lang)
-# sentences = [
-#     'once he had worn trendy italian leather shoes and jeans from paris that had cost three hundred euros .', # en
-#     'Le français est la seule langue étrangère proposée dans le système éducatif .', # fr
-#     'El cadmio produce efectos tóxicos en los organismos vivos , aun en concentraciones muy pequeñas .', # es
-#     'Nach dem Zweiten Weltkrieg verbreitete sich Bonsai als Hobby in der ganzen Welt .', # de
-#     'وقد فاز في الانتخابات في الجولة الثانية من التصويت من قبل سيدي ولد الشيخ عبد الله ، مع أحمد ولد داداه في المرتبة الثانية .', # ar
-#     '羅伯特 · 皮爾 斯 生於 1863年 , 在 英國 曼徹斯特 學習 而 成為 一 位 工程師 . 1933年 , 皮爾斯 在 直布羅陀去世 .', # zh
-# ]
-
-# sentences = ['I am happy', 'Ich bin fröhlich']
 sentences = ['I am happy', 'once he had worn trendy italian leather shoes and jeans from paris that had cost three hundred euros .']
 
 codes_path = 'codes_xnli_100'
@@ -68,25 +34,6 @@ vocab_path = 'vocab_xnli_100'
 
 bpe = fastBPE.fastBPE(codes_path, vocab_path)
 sentences = bpe.apply(sentences)
-
-# def to_bpe(sentences):
-#     # write sentences to tmp file
-#     with open('/tmp/sentences.txt', 'w') as fwrite:
-#         for sent in sentences:
-#             fwrite.write(sent + '\n')
-#
-#     # apply bpe to tmp file
-#     os.system('%s applybpe /tmp/sentences.txt /tmp/sentences.txt %s' % (fastbpe, codes))
-#
-#     # load bpe-ized sentences
-#     sentences_bpe = []
-#     with open('/tmp/sentences.txt') as f:
-#         for line in f:
-#             sentences_bpe.append(line.rstrip())
-#
-#     return sentences_bpe
-
-# Below are already BPE-ized sentences
 
 # # bpe-ize sentences
 # sentences = to_bpe(sentences)
