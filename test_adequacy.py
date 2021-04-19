@@ -1,5 +1,6 @@
 import os
 import torch
+import torch.nn as nn
 
 from xlm.utils import AttrDict
 from xlm.data.dictionary import Dictionary, BOS_WORD, EOS_WORD, PAD_WORD, UNK_WORD, MASK_WORD
@@ -115,3 +116,11 @@ langs = None
 tensor = model('fwd', x=word_ids, lengths=lengths, langs=langs, causal=False).contiguous()
 print(tensor.size())
 print(tensor[0].size())
+
+embeddings = tensor[0]
+en_tensor = embeddings[0].unsqueeze(0)
+de_tensor = embeddings[1].unsqueeze(0)
+
+cos = nn.CosineSimilarity()
+sim = cos(en_tensor, de_tensor)
+print(sim)
