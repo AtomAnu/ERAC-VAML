@@ -118,7 +118,7 @@ tensor = model('fwd', x=word_ids, lengths=lengths, langs=langs, causal=False).co
 print(tensor.size())
 print(tensor[0].size())
 
-embeddings = tensor[0]
+embeddings = tensor[-1]
 en_tensor = embeddings[0].unsqueeze(0)
 de_tensor = embeddings[1].unsqueeze(0)
 
