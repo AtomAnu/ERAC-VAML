@@ -5,7 +5,7 @@ from xlm.utils import AttrDict
 from xlm.data.dictionary import Dictionary, BOS_WORD, EOS_WORD, PAD_WORD, UNK_WORD, MASK_WORD
 from xlm.model.transformer import TransformerModel
 
-from sklearn.metrics.pairwise import cosine_similarity
+# from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
 # xlmr = torch.hub.load('pytorch/fairseq', 'xlmr.large')
@@ -43,7 +43,7 @@ model.eval()
 model.load_state_dict(reloaded['model'])
 
 # Below is one way to bpe-ize sentences
-codes = ""  # path to the codes of the model
+codes = "codes_xnli_100 vocab_xnli_100"  # path to the codes of the model
 fastbpe = os.path.join(os.getcwd(), 'tools/fastBPE/fast')
 
 
