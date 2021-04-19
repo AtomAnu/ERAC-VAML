@@ -77,13 +77,14 @@ def get_rewards(bleu_metric, hyp, ref, return_bleu=False, scale_reward=True):
 
 def get_fluency_scores(lm, tokenizer, hyp_sents):
     fluency_scores = []
-    for sent in hyp_sents:
-        tokenize_input = tokenizer.tokenize(sent)
-        tensor_input = torch.tensor([tokenizer.convert_tokens_to_ids(tokenize_input)])
-        loss = lm(tensor_input, lm_labels=tensor_input)
-        fluency = 1/np.exp(loss)
+    with torch.no_grad():
+        for sent in hyp_sents:
+            tokenize_input = tokenizer.tokenize(sent)
+            tensor_input = torch.tensor([tokenizer.convert_tokens_to_ids(tokenize_input)])
+            loss = lm(tensor_input, lm_labels=tensor_input)
+            fluency = 1/np.exp(loss.item())
 
-        fluency_scores.append(fluency)
+            fluency_scores.append(fluency)
 
     return fluency_scores
 
