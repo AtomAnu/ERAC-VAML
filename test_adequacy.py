@@ -54,7 +54,7 @@ def to_bpe(sentences):
             fwrite.write(sent + '\n')
 
     # apply bpe to tmp file
-    os.system('%s applybpe /tmp/sentences.bpe /tmp/sentences %s' % (fastbpe, codes))
+    os.system('%s applybpe /tmp/sentences.bpe /tmp/sentences.bpe %s' % (fastbpe, codes))
 
     # load bpe-ized sentences
     sentences_bpe = []
