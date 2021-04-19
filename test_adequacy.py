@@ -43,7 +43,8 @@ model.eval()
 model.load_state_dict(reloaded['model'])
 
 # Below is one way to bpe-ize sentences
-codes = "codes_xnli_100 vocab_xnli_100"  # path to the codes of the model
+# codes = "codes_xnli_100 vocab_xnli_100"  # path to the codes of the model
+codes = "codes_xnli_100"  # path to the codes of the model
 fastbpe = os.path.join(os.getcwd(), 'tools/fastBPE/fast')
 
 
