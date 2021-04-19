@@ -147,7 +147,7 @@ else:
 
         ##### for semantic adequacy calculation
         # reload a pre-trained xlm model
-        XLM_path = 'mlm_100_1280.pth'
+        XLM_path = '../../mlm_100_1280.pth'
         reloaded = torch.load(XLM_path)
         params = AttrDict(reloaded['params'])
         print("Supported languages: %s" % ", ".join(params.lang2id.keys()))
@@ -331,7 +331,7 @@ def evaluate(iterator):
         # pytorch_bleu requires size [bsz x nref|nhyp x seqlen]
         ref, hyp = utils.prepare_for_bleu(tgt, hyps, eos_idx=eos_idx, pad_idx=tgt_pad_idx, unk_idx=tgt_unk_idx, exclude_unk=True)
         bleu_metric.add_to_corpus(hyp, ref)
-
+    print('Evaluation')
     print(src.size())
     print(hyps.size())
     # sanity check
