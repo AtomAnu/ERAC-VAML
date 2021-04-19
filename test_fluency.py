@@ -41,7 +41,8 @@ def score(sentence):
     return math.exp(loss)
 
 
-sample_inputs = ['I just want to go to sleep',
+sample_inputs = ['I am happy',
+                 'I just want to go to sleep',
                  'I just want to go to cow',
                  'Cow animal cat nugget',
                  'Hello World']

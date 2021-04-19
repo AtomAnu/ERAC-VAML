@@ -11,7 +11,7 @@ from torch.autograd import Variable
 
 sys.path.append('../..')
 from shared import data, utils, models, metric
-from pytorch_pretrained_bert import BertTokenizer, BertForMaskedLM
+from pytorch_pretrained_bert import OpenAIGPTTokenizer, OpenAIGPTModel, OpenAIGPTLMHeadModel
 
 parser = argparse.ArgumentParser(description='train_erac.py')
 parser.add_argument('--save_data', default='../data/iwslt14', type=str, help="Input file for the prepared data")
@@ -134,10 +134,12 @@ else:
     crt_optimizer = torch.optim.Adam(critic.parameters(), lr=args.crt_lr, betas=(args.crt_beta1, 0.999))
 
     if args.use_unsuper_reward:
-        # for fluency calculation
-        bertMaskedLM = BertForMaskedLM.from_pretrained('bert-base-uncased')
-        tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-        bertMaskedLM.eval()
+        ##### for fluency calculation
+        # load pre-trained language model (weights)
+        GPTLM = OpenAIGPTLMHeadModel.from_pretrained('openai-gpt')
+        GPTLM.eval()
+        # load pre-trained model tokenizer (vocabulary)
+        tokenizer = OpenAIGPTTokenizer.from_pretrained('openai-gpt')
 
 
 ##### training metric related
@@ -171,7 +173,7 @@ def train_erac(src, tgt):
         hyp_sents.append(hyp_sent)
 
     print(hyp_sents)
-    fluency = utils.get_fluency_scores(bertMaskedLM, tokenizer, hyp_sents)
+    fluency = utils.get_fluency_scores(GPTLM, tokenizer, hyp_sents)
     print('Fluency: {}'.format(fluency))
     # hyp_sent = vocab['tgt'].convert_to_sent(hyp.contiguous().data.cpu().view(-1), exclude=[tgt_pad_idx, eos_idx])
     # print(hyp_sent)
