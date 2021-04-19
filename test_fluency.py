@@ -20,7 +20,8 @@ def get_score(sentence):
 sample_inputs = ['I just want to go to sleep',
                  'I just want to go to cow',
                  'Cow animal cat nugget',
-                 'Hello World']
+                 'Hello World',
+                 'Hello']
 
 for input in sample_inputs:
     print('Sentence: {}, Fluency: {}'.format(input, str(get_score(input))))
