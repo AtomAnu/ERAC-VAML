@@ -123,5 +123,5 @@ en_tensor = embeddings[0].unsqueeze(0)
 de_tensor = embeddings[1].unsqueeze(0)
 
 cos = nn.CosineSimilarity()
-sim = cos(en_tensor, de_tensor)
+sim = cos(en_tensor, en_tensor)
 print(sim)
