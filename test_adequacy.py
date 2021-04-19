@@ -83,15 +83,15 @@ sentences = bpe.apply(sentences)
 
 # # bpe-ize sentences
 # sentences = to_bpe(sentences)
-# print('\n\n'.join(sentences))
-#
-# # check how many tokens are OOV
-# n_w = len([w for w in ' '.join(sentences).split()])
-# n_oov = len([w for w in ' '.join(sentences).split() if w not in dico.word2id])
-# print('Number of out-of-vocab words: %s/%s' % (n_oov, n_w))
-#
-# # add </s> sentence delimiters
-# sentences = [(('</s> %s </s>' % sent.strip()).split()) for sent in sentences]
+print('\n\n'.join(sentences))
+
+# check how many tokens are OOV
+n_w = len([w for w in ' '.join(sentences).split()])
+n_oov = len([w for w in ' '.join(sentences).split() if w not in dico.word2id])
+print('Number of out-of-vocab words: %s/%s' % (n_oov, n_w))
+
+# add </s> sentence delimiters
+sentences = [(('</s> %s </s>' % sent.strip()).split()) for sent in sentences]
 
 bs = len(sentences)
 slen = max([len(sent) for sent in sentences])
