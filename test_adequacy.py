@@ -49,16 +49,16 @@ fastbpe = os.path.join(os.getcwd(), 'tools/fastBPE/fast')
 
 def to_bpe(sentences):
     # write sentences to tmp file
-    with open('/tmp/sentences.bpe', 'w') as fwrite:
+    with open('/tmp/sentences.txt', 'w') as fwrite:
         for sent in sentences:
             fwrite.write(sent + '\n')
 
     # apply bpe to tmp file
-    os.system('%s applybpe /tmp/sentences.bpe /tmp/sentences.bpe %s' % (fastbpe, codes))
+    os.system('%s applybpe /tmp/sentences.txt /tmp/sentences.txt %s' % (fastbpe, codes))
 
     # load bpe-ized sentences
     sentences_bpe = []
-    with open('/tmp/sentences.bpe') as f:
+    with open('/tmp/sentences.txt') as f:
         for line in f:
             sentences_bpe.append(line.rstrip())
 
@@ -72,8 +72,6 @@ sentences = [
     'Le français est la seule langue étrangère proposée dans le système éducatif .', # fr
     'El cadmio produce efectos tóxicos en los organismos vivos , aun en concentraciones muy pequeñas .', # es
     'Nach dem Zweiten Weltkrieg verbreitete sich Bonsai als Hobby in der ganzen Welt .', # de
-    'وقد فاز في الانتخابات في الجولة الثانية من التصويت من قبل سيدي ولد الشيخ عبد الله ، مع أحمد ولد داداه في المرتبة الثانية .', # ar
-    '羅伯特 · 皮爾 斯 生於 1863年 , 在 英國 曼徹斯特 學習 而 成為 一 位 工程師 . 1933年 , 皮爾斯 在 直布羅陀去世 .', # zh
 ]
 
 # bpe-ize sentences
