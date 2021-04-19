@@ -27,7 +27,7 @@ model = TransformerModel(params, dico, True, True)
 model.eval()
 model.load_state_dict(reloaded['model'])
 
-sentences = ['I am happy', 'once he had worn trendy italian leather shoes and jeans from paris that had cost three hundred euros .']
+sentences = ['I am happy', 'Ich bin fröhlich']
 
 codes_path = 'codes_xnli_100'
 vocab_path = 'vocab_xnli_100'
@@ -57,8 +57,6 @@ for i in range(len(sentences)):
 
 lengths = torch.LongTensor([len(sent) for sent in sentences])
 
-# NOTE: No more language id (removed it in a later version)
-# langs = torch.LongTensor([params.lang2id[lang] for _, lang in sentences]).unsqueeze(0).expand(slen, bs) if params.n_langs > 1 else None
 langs = None
 
 tensor = model('fwd', x=word_ids, lengths=lengths, langs=langs, causal=False).contiguous()
