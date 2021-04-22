@@ -205,7 +205,7 @@ def train_erac(src, tgt):
     hyp_sents = []
     for src_sent, hyp_sent in zip(src.permute(1,0),hyp):
         print('***********************************')
-        print(src_sent.contiguous().data.cpu().view(-1))
+        print(hyp_sent.contiguous().data.cpu().view(-1))
         src_sent = vocab['src'].convert_to_sent(src_sent.contiguous().data.cpu().view(-1), exclude=[src_pad_idx])
         hyp_sent = vocab['tgt'].convert_to_sent(hyp_sent.contiguous().data.cpu().view(-1), exclude=[tgt_pad_idx, eos_idx])
         src_sents.append(src_sent)
