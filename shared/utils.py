@@ -107,7 +107,7 @@ def get_unsuper_rewards(lm, tokenizer,
 
             R[i, j] = curr_reward
             prev_fluency = curr_fluency
-            prev_adequacy = curr_adequacy
+            if inc_adequacy: prev_adequacy = curr_adequacy
 
     return R
 
