@@ -88,7 +88,7 @@ def get_unsuper_rewards(lm, tokenizer,
         if inc_adequacy:
             src_sent = vocab['src'].convert_to_sent(src_idx.contiguous().data.cpu().view(-1), exclude=[vocab['src'].pad_idx])
 
-        for j in range(0, hyp_idx.size(2)):
+        for j in range(0, hyp_idx.size(1)):
 
             if j == 0:
                 hyp_sent = vocab['tgt'].convert_to_sent(hyp_idx[:,:j+1].contiguous().data.cpu().view(-1), exclude=[vocab['tgt'].pad_idx, vocab['tgt'].eos_idx])
