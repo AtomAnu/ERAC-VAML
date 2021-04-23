@@ -147,7 +147,7 @@ def train(epoch):
 
         optimizer.zero_grad()
         loss.backward()
-        gnorm = nn.utils.clip_grad_norm(actor.parameters(), args.grad_clip)
+        gnorm = nn.utils.clip_grad_norm_(actor.parameters(), args.grad_clip)
         optimizer.step()
 
         # logging 
