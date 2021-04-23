@@ -201,6 +201,7 @@ def train_erac(src, tgt):
     _, bleu = utils.get_rewards(bleu_metric, hyp, ref, return_bleu=True)
 
     R = utils.get_unsuper_rewards(GPTLM, tokenizer, XLM, bpe, dico, params, cos_sim, vocab, src, hyp)
+    R = R.to('cuda')
     print('Src shape: {} | Hyp shape: {} | Ref shape: {} | Reward shape: {}'.format(src.size(),hyp.size(),ref.size(),R.size()))
     print('######## Reward ##########')
     print(R)
@@ -246,9 +247,6 @@ def train_erac(src, tgt):
 
     # compute target value : `Q_hat(s, a) = r(s, a) + V_bar(s')`
     Q_hat = R.clone().detach().requires_grad_(True)
-    Q_hat = Q_hat.to('cuda')
-    print(Q_hat.data.device)
-    print(V_bar.data.device)
     Q_hat.data[:-1] += V_bar.data[1:]
 
     # compute TD error : `td_error = Q_hat - Q_mod`
