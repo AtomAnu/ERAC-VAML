@@ -75,49 +75,80 @@ def get_rewards(bleu_metric, hyp, ref, return_bleu=False, scale_reward=True):
     else:
         return R
 
-def get_fluency_scores(lm, tokenizer, hyp_sents):
-    fluency_scores = []
+def get_unsuper_rewards(lm, tokenizer,
+                        xlm, bpe, dico, params, cos_sim,
+                        vocab, src, hyp, inc_adequacy=False, beta=1):
+
+    R = torch.zeros(hyp.size(2), hyp.size(0))
+
+    for i, (src_idx, hyp_idx) in enumerate(zip(src.permute(1, 0), hyp)):
+        prev_fluency = 0
+        prev_adequacy = 0
+
+        if inc_adequacy:
+            src_sent = vocab['src'].convert_to_sent(src_idx.contiguous().data.cpu().view(-1), exclude=[vocab['src'].pad_idx])
+
+        for j in range(0, hyp_idx.size(2)):
+
+            if j == 0:
+                hyp_sent = vocab['tgt'].convert_to_sent(hyp_idx[:,:j+1].contiguous().data.cpu().view(-1), exclude=[vocab['tgt'].pad_idx, vocab['tgt'].eos_idx])
+                curr_fluency = calculate_fluency(lm, tokenizer, hyp_sent)
+            else:
+                curr_fluency = 0
+            delta_fluency = curr_fluency - prev_fluency
+
+            if inc_adequacy:
+                curr_adequacy = calculate_adequacy(xlm, bpe, dico, params, cos_sim, src_sent, hyp_sent)
+                delta_adequacy = curr_adequacy - prev_adequacy
+
+                curr_reward = delta_fluency + beta * delta_adequacy
+            else:
+                curr_reward = delta_fluency
+
+            R[i, j] = curr_reward
+            prev_fluency = curr_fluency
+            prev_adequacy = curr_adequacy
+
+    return R
+
+def calculate_fluency(lm, tokenizer, hyp_sent):
+
     with torch.no_grad():
-        for sent in hyp_sents:
-            tokenize_input = tokenizer.tokenize(sent)
-            tensor_input = torch.tensor([tokenizer.convert_tokens_to_ids(tokenize_input)])
-            loss = lm(tensor_input, lm_labels=tensor_input)
-            fluency = 1/np.exp(loss.item())
+        tokenize_input = tokenizer.tokenize(hyp_sent)
+        tensor_input = torch.tensor([tokenizer.convert_tokens_to_ids(tokenize_input)])
+        loss = lm(tensor_input, lm_labels=tensor_input)
+        fluency = 1/np.exp(loss.item())
+    return fluency
 
-            fluency_scores.append(fluency)
+def calculate_adequacy(xlm, bpe, dico, params, cos_sim, src_sent, hyp_sent):
 
-    return fluency_scores
+    src_hyp_pair = [src_sent, hyp_sent]
+    sentences = bpe.apply(src_hyp_pair)
 
-def get_adequacy_scores(xlm, bpe, dico, params, cos_sim, src_sents, hyp_sents):
-    adequacy_scores = []
-    for src_sent, hyp_sent in zip(src_sents, hyp_sents):
-        src_hyp_pair = [src_sent, hyp_sent]
-        sentences = bpe.apply(src_hyp_pair)
+    # add </s> sentence delimiters
+    sentences = [(('</s> %s </s>' % sent.strip()).split()) for sent in sentences]
 
-        # add </s> sentence delimiters
-        sentences = [(('</s> %s </s>' % sent.strip()).split()) for sent in sentences]
+    bs = len(sentences)
+    slen = max([len(sent) for sent in sentences])
 
-        bs = len(sentences)
-        slen = max([len(sent) for sent in sentences])
+    word_ids = torch.LongTensor(slen, bs).fill_(params.pad_index)
+    for i in range(len(sentences)):
+        sent = torch.LongTensor([dico.index(w) for w in sentences[i]])
+        word_ids[:len(sent), i] = sent
 
-        word_ids = torch.LongTensor(slen, bs).fill_(params.pad_index)
-        for i in range(len(sentences)):
-            sent = torch.LongTensor([dico.index(w) for w in sentences[i]])
-            word_ids[:len(sent), i] = sent
+    lengths = torch.LongTensor([len(sent) for sent in sentences])
 
-        lengths = torch.LongTensor([len(sent) for sent in sentences])
+    langs = None
 
-        langs = None
+    tensor = xlm('fwd', x=word_ids, lengths=lengths, langs=langs, causal=False).contiguous()
 
-        tensor = xlm('fwd', x=word_ids, lengths=lengths, langs=langs, causal=False).contiguous()
+    embeddings = tensor[0]
+    en_tensor = embeddings[0].unsqueeze(0)
+    de_tensor = embeddings[1].unsqueeze(0)
 
-        embeddings = tensor[0]
-        en_tensor = embeddings[0].unsqueeze(0)
-        de_tensor = embeddings[1].unsqueeze(0)
+    adequacy = cos_sim(en_tensor, de_tensor)
 
-        similarity = cos_sim(en_tensor, de_tensor)
-        adequacy_scores.append(similarity)
-    return adequacy_scores
+    return adequacy
 
 def log_sum_exp(x, dim=-1, keepdim=False):
     max_x = x.max(dim=dim, keepdim=True)[0]
