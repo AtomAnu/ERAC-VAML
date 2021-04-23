@@ -200,7 +200,8 @@ def train_erac(src, tgt):
     ref, hyp = utils.prepare_for_bleu(tgt, seq, eos_idx=eos_idx, pad_idx=tgt_pad_idx, unk_idx=tgt_unk_idx)
     R, bleu = utils.get_rewards(bleu_metric, hyp, ref, return_bleu=True)
     print('Src shape: {} | Hyp shape: {} | Ref shape: {} | Reward shape: {}'.format(src.size(),hyp.size(),ref.size(),R.size()))
-
+    print('######## Reward ##########')
+    print(R)
     src_sents = []
     hyp_sents = []
     for src_sent, hyp_sent in zip(src.permute(1,0),hyp):
