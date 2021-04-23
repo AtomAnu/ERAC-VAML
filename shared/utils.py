@@ -92,10 +92,10 @@ def get_unsuper_rewards(lm, tokenizer,
         for j in range(0, hyp_idx.size(1)):
 
             if j == 0:
+                curr_fluency = 0
+            else:
                 hyp_sent = vocab['tgt'].convert_to_sent(hyp_idx[:,:j+1].contiguous().data.cpu().view(-1), exclude=[vocab['tgt'].pad_idx, vocab['tgt'].eos_idx])
                 curr_fluency = calculate_fluency(lm, tokenizer, hyp_sent)
-            else:
-                curr_fluency = 0
             delta_fluency = curr_fluency - prev_fluency
 
             if inc_adequacy:
