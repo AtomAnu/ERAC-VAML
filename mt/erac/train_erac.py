@@ -200,7 +200,7 @@ def train_erac(src, tgt):
     ref, hyp = utils.prepare_for_bleu(tgt, seq, eos_idx=eos_idx, pad_idx=tgt_pad_idx, unk_idx=tgt_unk_idx)
     _, bleu = utils.get_rewards(bleu_metric, hyp, ref, return_bleu=True)
 
-    R = utils.get_unsuper_rewards(GPTLM, tokenizer, XLM, bpe, dico, params, cos_sim, vocab, src, hyp)
+    R = utils.get_unsuper_rewards(GPTLM, tokenizer, XLM, bpe, dico, params, cos_sim, vocab, src, hyp, inc_adequacy=True)
     R = R.to('cuda')
     print('Src shape: {} | Hyp shape: {} | Ref shape: {} | Reward shape: {}'.format(src.size(),hyp.size(),ref.size(),R.size()))
     print('######## Reward ##########')
