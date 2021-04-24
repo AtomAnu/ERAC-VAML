@@ -11,6 +11,11 @@ from torch.autograd import Variable
 
 sys.path.append('../..')
 from shared import data, utils, models, metric
+from pytorch_pretrained_bert import OpenAIGPTTokenizer, OpenAIGPTModel, OpenAIGPTLMHeadModel
+from xlm.utils import AttrDict
+from xlm.data.dictionary import Dictionary, BOS_WORD, EOS_WORD, PAD_WORD, UNK_WORD, MASK_WORD
+from xlm.model.transformer import TransformerModel
+import fastBPE
 
 parser = argparse.ArgumentParser(description='train_critic.py')
 parser.add_argument('--save_data', default='../data/iwslt14', type=str, help="Input file for the prepared data")
@@ -140,35 +145,34 @@ if args.use_unsuper_reward:
     # load pre-trained model tokenizer (vocabulary)
     tokenizer = OpenAIGPTTokenizer.from_pretrained('openai-gpt')
 
-    if args.include_adequacy:
-        ##### for semantic adequacy calculation
-        # reload a pre-trained xlm model
-        XLM_path = '../../mlm_100_1280.pth'
-        reloaded = torch.load(XLM_path)
-        params = AttrDict(reloaded['params'])
-        print("Supported languages: %s" % ", ".join(params.lang2id.keys()))
+    ##### for semantic adequacy calculation
+    # reload a pre-trained xlm model
+    XLM_path = '../../mlm_100_1280.pth'
+    reloaded = torch.load(XLM_path)
+    params = AttrDict(reloaded['params'])
+    print("Supported languages: %s" % ", ".join(params.lang2id.keys()))
 
-        # build dictionary
-        dico = Dictionary(reloaded['dico_id2word'], reloaded['dico_word2id'], reloaded['dico_counts'])
-        params.n_words = len(dico)
-        params.bos_index = dico.index(BOS_WORD)
-        params.eos_index = dico.index(EOS_WORD)
-        params.pad_index = dico.index(PAD_WORD)
-        params.unk_index = dico.index(UNK_WORD)
-        params.mask_index = dico.index(MASK_WORD)
+    # build dictionary
+    dico = Dictionary(reloaded['dico_id2word'], reloaded['dico_word2id'], reloaded['dico_counts'])
+    params.n_words = len(dico)
+    params.bos_index = dico.index(BOS_WORD)
+    params.eos_index = dico.index(EOS_WORD)
+    params.pad_index = dico.index(PAD_WORD)
+    params.unk_index = dico.index(UNK_WORD)
+    params.mask_index = dico.index(MASK_WORD)
 
-        # build model
-        XLM = TransformerModel(params, dico, True, True)
-        XLM.eval()
-        XLM.load_state_dict(reloaded['model'])
+    # build model
+    XLM = TransformerModel(params, dico, True, True)
+    XLM.eval()
+    XLM.load_state_dict(reloaded['model'])
 
-        # paths for BPE codes and vocabs
-        codes_path = '../../codes_xnli_100'
-        vocab_path = '../../vocab_xnli_100'
-        bpe = fastBPE.fastBPE(codes_path, vocab_path)
+    # paths for BPE codes and vocabs
+    codes_path = '../../codes_xnli_100'
+    vocab_path = '../../vocab_xnli_100'
+    bpe = fastBPE.fastBPE(codes_path, vocab_path)
 
-        # cosine similarity model
-        cos_sim = nn.CosineSimilarity()
+    # cosine similarity model
+    cos_sim = nn.CosineSimilarity()
 
 ##### training
 def train(epoch):
