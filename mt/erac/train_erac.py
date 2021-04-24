@@ -59,6 +59,8 @@ parser.add_argument('--beamsize', type=int, default=5, help='size of the beam us
 
 parser.add_argument('--ppl_anneal', action='store_true', help="use perplexity as the learing rate annealing metric")
 parser.add_argument('--use_unsuper_reward', action='store_true', help='use unsupervised reward function')
+parser.add_argument('--include_adequacy', action='store_true', help='include semantic adequacy in the unsupervised reward function')
+parser.add_argument('--mu', type=float, default=1.0, help='hyperparameter controlling the importance of semantic adequacy in the unsupervised reward function')
 
 args = parser.parse_args()
 args.use_tgtnet = not args.no_tgtnet
@@ -145,34 +147,35 @@ else:
         # load pre-trained model tokenizer (vocabulary)
         tokenizer = OpenAIGPTTokenizer.from_pretrained('openai-gpt')
 
-        ##### for semantic adequacy calculation
-        # reload a pre-trained xlm model
-        XLM_path = '../../mlm_100_1280.pth'
-        reloaded = torch.load(XLM_path)
-        params = AttrDict(reloaded['params'])
-        print("Supported languages: %s" % ", ".join(params.lang2id.keys()))
+        if args.include_adequacy:
+            ##### for semantic adequacy calculation
+            # reload a pre-trained xlm model
+            XLM_path = '../../mlm_100_1280.pth'
+            reloaded = torch.load(XLM_path)
+            params = AttrDict(reloaded['params'])
+            print("Supported languages: %s" % ", ".join(params.lang2id.keys()))
 
-        # build dictionary
-        dico = Dictionary(reloaded['dico_id2word'], reloaded['dico_word2id'], reloaded['dico_counts'])
-        params.n_words = len(dico)
-        params.bos_index = dico.index(BOS_WORD)
-        params.eos_index = dico.index(EOS_WORD)
-        params.pad_index = dico.index(PAD_WORD)
-        params.unk_index = dico.index(UNK_WORD)
-        params.mask_index = dico.index(MASK_WORD)
+            # build dictionary
+            dico = Dictionary(reloaded['dico_id2word'], reloaded['dico_word2id'], reloaded['dico_counts'])
+            params.n_words = len(dico)
+            params.bos_index = dico.index(BOS_WORD)
+            params.eos_index = dico.index(EOS_WORD)
+            params.pad_index = dico.index(PAD_WORD)
+            params.unk_index = dico.index(UNK_WORD)
+            params.mask_index = dico.index(MASK_WORD)
 
-        # build model
-        XLM = TransformerModel(params, dico, True, True)
-        XLM.eval()
-        XLM.load_state_dict(reloaded['model'])
+            # build model
+            XLM = TransformerModel(params, dico, True, True)
+            XLM.eval()
+            XLM.load_state_dict(reloaded['model'])
 
-        # paths for BPE codes and vocabs
-        codes_path = '../../codes_xnli_100'
-        vocab_path = '../../vocab_xnli_100'
-        bpe = fastBPE.fastBPE(codes_path, vocab_path)
+            # paths for BPE codes and vocabs
+            codes_path = '../../codes_xnli_100'
+            vocab_path = '../../vocab_xnli_100'
+            bpe = fastBPE.fastBPE(codes_path, vocab_path)
 
-        # cosine similarity model
-        cos_sim = nn.CosineSimilarity()
+            # cosine similarity model
+            cos_sim = nn.CosineSimilarity()
 
 
 ##### training metric related
@@ -198,10 +201,14 @@ def train_erac(src, tgt):
 
     # compute rewards
     ref, hyp = utils.prepare_for_bleu(tgt, seq, eos_idx=eos_idx, pad_idx=tgt_pad_idx, unk_idx=tgt_unk_idx)
-    _, bleu = utils.get_rewards(bleu_metric, hyp, ref, return_bleu=True)
+    bleu_R, bleu = utils.get_rewards(bleu_metric, hyp, ref, return_bleu=True)
 
-    R = utils.get_unsuper_rewards(GPTLM, tokenizer, XLM, bpe, dico, params, cos_sim, vocab, src, hyp, inc_adequacy=True)
-    R = R.to('cuda')
+    if args.use_unsuper_reward:
+        R = utils.get_unsuper_rewards(GPTLM, tokenizer, XLM, bpe, dico, params, cos_sim, vocab, src, hyp,
+                                      inc_adequacy=args.include_adequacy, mu=args.mu)
+        R = R.to('cuda')
+    else:
+        R = bleu_R
     print('Src shape: {} | Hyp shape: {} | Ref shape: {} | Reward shape: {}'.format(src.size(),hyp.size(),ref.size(),R.size()))
     print('######## Reward ##########')
     print(R)

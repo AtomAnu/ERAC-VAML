@@ -56,6 +56,9 @@ parser.add_argument('--log_interval', type=int, default=200, metavar='N', help='
 
 parser.add_argument('--beamsize', type=int, default=5, help='size of the beam used for beam search')
 parser.add_argument('--nretain', type=int, default=1, help='number of sequences to be retained after beam search')
+parser.add_argument('--use_unsuper_reward', action='store_true', help='use unsupervised reward function')
+parser.add_argument('--include_adequacy', action='store_true', help='include semantic adequacy in the unsupervised reward function')
+parser.add_argument('--mu', type=float, default=1.0, help='hyperparameter controlling the importance of semantic adequacy in the unsupervised reward function')
 
 args = parser.parse_args()
 args.use_tgtnet = not args.no_tgtnet
@@ -129,6 +132,44 @@ elif args.optim.lower() == 'adam':
 ##### training metric related
 bleu_metric = metric.BLEU(n=4, pad_idx=tgt_pad_idx)
 
+if args.use_unsuper_reward:
+    ##### for fluency calculation
+    # load pre-trained language model (weights)
+    GPTLM = OpenAIGPTLMHeadModel.from_pretrained('openai-gpt')
+    GPTLM.eval()
+    # load pre-trained model tokenizer (vocabulary)
+    tokenizer = OpenAIGPTTokenizer.from_pretrained('openai-gpt')
+
+    if args.include_adequacy:
+        ##### for semantic adequacy calculation
+        # reload a pre-trained xlm model
+        XLM_path = '../../mlm_100_1280.pth'
+        reloaded = torch.load(XLM_path)
+        params = AttrDict(reloaded['params'])
+        print("Supported languages: %s" % ", ".join(params.lang2id.keys()))
+
+        # build dictionary
+        dico = Dictionary(reloaded['dico_id2word'], reloaded['dico_word2id'], reloaded['dico_counts'])
+        params.n_words = len(dico)
+        params.bos_index = dico.index(BOS_WORD)
+        params.eos_index = dico.index(EOS_WORD)
+        params.pad_index = dico.index(PAD_WORD)
+        params.unk_index = dico.index(UNK_WORD)
+        params.mask_index = dico.index(MASK_WORD)
+
+        # build model
+        XLM = TransformerModel(params, dico, True, True)
+        XLM.eval()
+        XLM.load_state_dict(reloaded['model'])
+
+        # paths for BPE codes and vocabs
+        codes_path = '../../codes_xnli_100'
+        vocab_path = '../../vocab_xnli_100'
+        bpe = fastBPE.fastBPE(codes_path, vocab_path)
+
+        # cosine similarity model
+        cos_sim = nn.CosineSimilarity()
+
 ##### training
 def train(epoch):
     actor.train()
@@ -146,7 +187,14 @@ def train(epoch):
 
         # compute rewards
         ref, hyp = utils.prepare_for_bleu(tgt, seq, eos_idx=eos_idx, pad_idx=tgt_pad_idx, unk_idx=tgt_unk_idx)
-        R, score = utils.get_rewards(bleu_metric, hyp, ref, return_bleu=True)
+        bleu_R, score = utils.get_rewards(bleu_metric, hyp, ref, return_bleu=True)
+
+        if args.use_unsuper_reward:
+            R = utils.get_unsuper_rewards(GPTLM, tokenizer, XLM, bpe, dico, params, cos_sim, vocab, src, hyp,
+                                          inc_adequacy=args.include_adequacy, mu=args.mu)
+            R = R.to('cuda')
+        else:
+            R = bleu_R
 
         # given a demonstration trajectory / real sequence tgt, get Q(y_{<t}, w) for all w in W_+
         Q_all = critic(tgt, seq, out_mode=models.LOGIT)

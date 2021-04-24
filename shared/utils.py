@@ -77,7 +77,7 @@ def get_rewards(bleu_metric, hyp, ref, return_bleu=False, scale_reward=True):
 
 def get_unsuper_rewards(lm, tokenizer,
                         xlm, bpe, dico, params, cos_sim,
-                        vocab, src, hyp, inc_adequacy=False, beta=1):
+                        vocab, src, hyp, inc_adequacy=False, mu=1):
 
     R = torch.zeros(hyp.size(2), hyp.size(0))
     print(R.size())
@@ -105,7 +105,7 @@ def get_unsuper_rewards(lm, tokenizer,
                 curr_adequacy = calculate_adequacy(xlm, bpe, dico, params, cos_sim, src_sent, hyp_sent)
                 delta_adequacy = curr_adequacy - prev_adequacy
 
-                curr_reward = delta_fluency + beta * delta_adequacy
+                curr_reward = delta_fluency + mu * delta_adequacy
             else:
                 curr_reward = delta_fluency
 
