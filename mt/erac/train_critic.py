@@ -212,8 +212,8 @@ def train(epoch):
         act_dist = act_log_dist.exp()
 
         if args.use_tgtnet:
-            tgt_volatile = Variable(tgt.data, volatile=True)
-            seq_volatile = Variable(seq.data, volatile=True)
+            tgt_volatile = tgt.data.clone().detach().requires_grad_(True)
+            seq_volatile = seq.data.clone().detach().requires_grad_(True)
             Q_all_bar = tgt_critic(tgt_volatile, seq_volatile, out_mode=models.LOGIT)
 
             if critic.dec_tau > 0:
@@ -227,8 +227,8 @@ def train(epoch):
                 V_bar = (act_dist * Q_all.data).sum(2) * mask.data
 
         # compute target value : `Q_hat(s, a) = r(s, a) + V_bar(s')`
-        Q_hat = R.clone()
-        Q_hat[:-1] += V_bar[1:]
+        Q_hat = R.clone().detach().requires_grad_(True)
+        Q_hat.data[:-1] += V_bar.data[1:]
 
         # compute TD error : `td_error = Q_hat - Q_mod`
         td_error = Variable(Q_hat - Q_mod.data)
