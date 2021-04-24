@@ -327,7 +327,11 @@ class Decoder(nn.Module):
             # make sure the last token is <eos> if not finished yet
             if i == max_len - 1:
                 token = Variable(inp.data.new(bs, k).fill_(self.eos_idx))
-                token.data.masked_fill_(eos_mask, self.pad_idx)
+                print(token.size())
+                print(eos_mask)
+                print(eos_mask.size())
+                print(eos_mask.unsqueeze(2).size())
+                token.data.masked_fill_(eos_mask.unsqueeze(2).to(torch.bool), self.pad_idx)
                 token = token.view(bs * k, 1)
             else:
                 prob_rescaled = (log_prob / temperature).exp()
