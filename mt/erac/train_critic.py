@@ -192,13 +192,11 @@ def train(epoch):
         # compute rewards
         ref, hyp = utils.prepare_for_bleu(tgt, seq, eos_idx=eos_idx, pad_idx=tgt_pad_idx, unk_idx=tgt_unk_idx)
         bleu_R, score = utils.get_rewards(bleu_metric, hyp, ref, return_bleu=True)
-        print('BLEU Reward Shape: {}'.format(bleu_R.size()))
-        print('Hyp Shape: {}'.format(hyp.size()))
+
         if args.use_unsuper_reward:
             R = utils.get_unsuper_rewards(GPTLM, tokenizer, XLM, bpe, dico, params, cos_sim, vocab, src, hyp,
                                           inc_adequacy=args.include_adequacy, mu=args.mu)
             R = R.to('cuda')
-            print('Unsuper R Shape: {}'.format(R.size()))
         else:
             R = bleu_R
 
@@ -230,8 +228,6 @@ def train(epoch):
 
         # compute target value : `Q_hat(s, a) = r(s, a) + V_bar(s')`
         Q_hat = R.clone().detach().requires_grad_(True)
-        print(Q_hat.size())
-        print(V_bar.size())
         Q_hat.data[:-1] += V_bar.data[1:]
 
         # compute TD error : `td_error = Q_hat - Q_mod`
@@ -252,7 +248,7 @@ def train(epoch):
         # optimization
         optimizer.zero_grad()
         loss.backward()
-        gnorm = nn.utils.clip_grad_norm(critic.parameters(), args.grad_clip)
+        gnorm = nn.utils.clip_grad_norm_(critic.parameters(), args.grad_clip)
         optimizer.step()
 
         if args.use_tgtnet:

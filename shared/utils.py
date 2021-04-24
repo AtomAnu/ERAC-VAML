@@ -80,7 +80,6 @@ def get_unsuper_rewards(lm, tokenizer,
                         vocab, src, hyp, inc_adequacy=False, mu=1):
 
     R = torch.zeros(hyp.size(2), hyp.size(0))
-    print(R.size())
 
     for i, (src_idx, hyp_idx) in enumerate(zip(src.permute(1, 0), hyp)):
         prev_fluency = 0
