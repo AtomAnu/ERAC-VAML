@@ -118,8 +118,8 @@ def calculate_fluency(lm, tokenizer, hyp_sent):
 
     with torch.no_grad():
         tokenize_input = tokenizer.tokenize(hyp_sent)
+        if len(tokenize_input) == 0: return 0
         tensor_input = torch.tensor([tokenizer.convert_tokens_to_ids(tokenize_input)])
-        if tensor_input.size(0) == 0: return 0
         loss = lm(tensor_input, lm_labels=tensor_input)
         fluency = 1/np.exp(loss.item())
     return fluency
