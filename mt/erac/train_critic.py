@@ -299,14 +299,20 @@ def evaluate(iterator):
 
         # compute rewards
         ref, hyp = utils.prepare_for_bleu(tgt, seq, eos_idx=eos_idx, pad_idx=tgt_pad_idx, unk_idx=tgt_unk_idx)
-        R = utils.get_rewards(bleu_metric, hyp, ref)
+        bleu_R = utils.get_rewards(bleu_metric, hyp, ref)
+
+        if args.use_unsuper_reward:
+            R = utils.get_unsuper_rewards(GPTLM, tokenizer, XLM, bpe, dico, params, cos_sim, vocab, src, hyp,
+                                          inc_adequacy=args.include_adequacy, mu=args.mu, device=device)
+        else:
+            R = bleu_R
         
         # compute target value : `Q_hat(s, a) = r(s, a) + V_bar(s')`
-        Q_hat = R.clone()
-        Q_hat[:-1] += V_hat[1:]
+        Q_hat = R.clone().detach().requires_grad_(True)
+        Q_hat.data[:-1] += V_bar.data[1:]
 
         # compute TD error : `td_error = Q_hat - Q_mod`
-        td_error = Variable(Q_hat) - Q_mod
+        td_error = Q_hat.data - Q_mod.data
 
         # accumulate nll for computing perplexity (this is not necessary though)
         cnt_tok += mask.data.sum()
