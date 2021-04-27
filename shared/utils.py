@@ -93,7 +93,7 @@ def get_unsuper_rewards(lm, tokenizer,
                                                     exclude=[vocab['src'].pad_idx])
             src_sent = html.unescape(src_sent)
 
-        hyp_sent = vocab['tgt'].convert_to_sent(hyp_idx[:, :j + 1].contiguous().data.cpu().view(-1),
+        hyp_sent = vocab['tgt'].convert_to_sent(hyp_idx.contiguous().data.cpu().view(-1),
                                                 exclude=[vocab['tgt'].pad_idx, vocab['tgt'].eos_idx])
         hyp_sent = html.unescape(hyp_sent)
         hyp_words = hyp_sent.strip().lower().split()
