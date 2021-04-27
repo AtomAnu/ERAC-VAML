@@ -200,6 +200,7 @@ def train(epoch):
         ref, hyp = utils.prepare_for_bleu(tgt, seq, eos_idx=eos_idx, pad_idx=tgt_pad_idx, unk_idx=tgt_unk_idx)
         bleu_R, score = utils.get_rewards(bleu_metric, hyp, ref, return_bleu=True)
         _, dummy = utils.get_rewards(bleu_metric, ref, ref, return_bleu=True)
+        print(score)
         print(dummy)
 
         if args.use_unsuper_reward:
