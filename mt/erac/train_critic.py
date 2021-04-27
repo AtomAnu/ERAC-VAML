@@ -77,6 +77,11 @@ args.use_tgtnet = not args.no_tgtnet
 #     else:
 #         torch.cuda.manual_seed(args.seed)
 
+if args.cuda:
+    device = 'cuda'
+else:
+    device = 'cpu'
+
 ##### init logger
 args.work_dir = os.path.join(args.work_dir, time.strftime("%Y%m%d-%H%M%S"))
 logging = utils.create_exp_dir(args.work_dir, scripts_to_save=['train_critic.py'], debug=args.debug)
@@ -142,6 +147,7 @@ if args.use_unsuper_reward:
     # load pre-trained language model (weights)
     GPTLM = OpenAIGPTLMHeadModel.from_pretrained('openai-gpt')
     GPTLM.eval()
+    if args.cuda: GPTLM.cuda()
     # load pre-trained model tokenizer (vocabulary)
     tokenizer = OpenAIGPTTokenizer.from_pretrained('openai-gpt')
 
@@ -164,6 +170,7 @@ if args.use_unsuper_reward:
     # build model
     XLM = TransformerModel(params, dico, True, True)
     XLM.eval()
+    if args.cuda: XLM.cuda()
     XLM.load_state_dict(reloaded['model'])
 
     # paths for BPE codes and vocabs
@@ -195,8 +202,11 @@ def train(epoch):
 
         if args.use_unsuper_reward:
             R = utils.get_unsuper_rewards(GPTLM, tokenizer, XLM, bpe, dico, params, cos_sim, vocab, src, hyp,
-                                          inc_adequacy=args.include_adequacy, mu=args.mu)
-            R = R.to('cuda')
+                                          inc_adequacy=args.include_adequacy, mu=args.mu, device)
+            if R.device != device: R = R.to('cuda')
+
+            #to-be-removed
+            break
         else:
             R = bleu_R
 

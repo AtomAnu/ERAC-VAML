@@ -4,7 +4,8 @@ import os, shutil
 import numpy as np
 
 import torch
-
+import html
+import time
 
 def logging(s, log_path, print_=True, log_=True):
     if print_:
@@ -77,9 +78,11 @@ def get_rewards(bleu_metric, hyp, ref, return_bleu=False, scale_reward=True):
 
 def get_unsuper_rewards(lm, tokenizer,
                         xlm, bpe, dico, params, cos_sim,
-                        vocab, src, hyp, inc_adequacy=False, mu=1):
+                        vocab, src, hyp, inc_adequacy=False, mu=1, device='cuda'):
 
-    R = torch.zeros(hyp.size(2), hyp.size(0))
+    start = time.time()
+
+    R = torch.zeros(hyp.size(2), hyp.size(0)).to(device)
 
     for i, (src_idx, hyp_idx) in enumerate(zip(src.permute(1, 0), hyp)):
         prev_fluency = 0
@@ -88,16 +91,23 @@ def get_unsuper_rewards(lm, tokenizer,
         if inc_adequacy:
             src_sent = vocab['src'].convert_to_sent(src_idx.contiguous().data.cpu().view(-1),
                                                     exclude=[vocab['src'].pad_idx])
+            src_sent = html.unescape(src_sent)
 
-        for j in range(0, hyp_idx.size(1)):
+        hyp_sent = vocab['tgt'].convert_to_sent(hyp_idx[:, :j + 1].contiguous().data.cpu().view(-1),
+                                                exclude=[vocab['tgt'].pad_idx, vocab['tgt'].eos_idx])
+        hyp_sent = html.unescape(hyp_sent)
+        hyp_words = hyp_sent.strip().lower().split()
+        hyp_ids = []
 
-            hyp_sent = vocab['tgt'].convert_to_sent(hyp_idx[:, :j + 1].contiguous().data.cpu().view(-1),
-                                                    exclude=[vocab['tgt'].pad_idx, vocab['tgt'].eos_idx])
+        for j in range(0, len(hyp_words)):
 
-            if j == 0:
+            hyp_ids += tokenizer.convert_tokens_to_ids(tokenizer.tokenize(sample_words[j]))
+
+            if j == 0 or len(hyp_words) == 0:
                 curr_fluency = 0
             else:
-                curr_fluency = calculate_fluency(lm, tokenizer, hyp_sent)
+                hyp_ids_tensor = torch.tensor([hyp_ids]).to(device)
+                curr_fluency = calculate_fluency(lm, hyp_ids_tensor)
             delta_fluency = curr_fluency - prev_fluency
 
             if inc_adequacy:
@@ -112,17 +122,68 @@ def get_unsuper_rewards(lm, tokenizer,
             prev_fluency = curr_fluency
             if inc_adequacy: prev_adequacy = curr_adequacy
 
+    end = time.time()
+
+    print(end-start)
+    print(R)
+
     return R
 
-def calculate_fluency(lm, tokenizer, hyp_sent):
+# def get_unsuper_rewards(lm, tokenizer,
+#                         xlm, bpe, dico, params, cos_sim,
+#                         vocab, src, hyp, inc_adequacy=False, mu=1, device='cuda'):
+#
+#     R = torch.zeros(hyp.size(2), hyp.size(0))
+#
+#     for i, (src_idx, hyp_idx) in enumerate(zip(src.permute(1, 0), hyp)):
+#         prev_fluency = 0
+#         prev_adequacy = 0
+#
+#         if inc_adequacy:
+#             src_sent = vocab['src'].convert_to_sent(src_idx.contiguous().data.cpu().view(-1),
+#                                                     exclude=[vocab['src'].pad_idx])
+#
+#         for j in range(0, hyp_idx.size(1)):
+#
+#             hyp_sent = vocab['tgt'].convert_to_sent(hyp_idx[:, :j + 1].contiguous().data.cpu().view(-1),
+#                                                     exclude=[vocab['tgt'].pad_idx, vocab['tgt'].eos_idx])
+#
+#             if j == 0:
+#                 curr_fluency = 0
+#             else:
+#                 curr_fluency = calculate_fluency(lm, tokenizer, hyp_sent)
+#             delta_fluency = curr_fluency - prev_fluency
+#
+#             if inc_adequacy:
+#                 curr_adequacy = calculate_adequacy(xlm, bpe, dico, params, cos_sim, src_sent, hyp_sent)
+#                 delta_adequacy = curr_adequacy - prev_adequacy
+#
+#                 curr_reward = delta_fluency + mu * delta_adequacy
+#             else:
+#                 curr_reward = delta_fluency
+#
+#             R[j, i] = curr_reward
+#             prev_fluency = curr_fluency
+#             if inc_adequacy: prev_adequacy = curr_adequacy
+#
+#     return R
+
+def calculate_fluency(lm, hyp_ids_tensor):
 
     with torch.no_grad():
-        tokenize_input = tokenizer.tokenize(hyp_sent)
-        if len(tokenize_input) == 0: return 0
-        tensor_input = torch.tensor([tokenizer.convert_tokens_to_ids(tokenize_input)])
-        loss = lm(tensor_input, lm_labels=tensor_input)
+        loss = lm(hyp_ids_tensor, lm_labels=hyp_ids_tensor)
         fluency = 1/np.exp(loss.item())
     return fluency
+
+# def calculate_fluency(lm, tokenizer, hyp_sent):
+#
+#     with torch.no_grad():
+#         tokenize_input = tokenizer.tokenize(hyp_sent)
+#         if len(tokenize_input) == 0: return 0
+#         tensor_input = torch.tensor([tokenizer.convert_tokens_to_ids(tokenize_input)])
+#         loss = lm(tensor_input, lm_labels=tensor_input)
+#         fluency = 1/np.exp(loss.item())
+#     return fluency
 
 def calculate_adequacy(xlm, bpe, dico, params, cos_sim, src_sent, hyp_sent):
 
