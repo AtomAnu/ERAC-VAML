@@ -120,8 +120,6 @@ def get_unsuper_rewards(lm, tokenizer,
             prev_fluency = curr_fluency
             if inc_adequacy: prev_adequacy = curr_adequacy
 
-    end = time.time()
-
     return R
 
 def calculate_fluency(lm, hyp_ids_tensor):
