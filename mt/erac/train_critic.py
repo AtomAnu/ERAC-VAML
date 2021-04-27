@@ -231,7 +231,7 @@ def train(epoch):
         Q_hat.data[:-1] += V_bar.data[1:]
 
         # compute TD error : `td_error = Q_hat - Q_mod`
-        td_error = Variable(Q_hat - Q_mod.data)
+        td_error = Q_hat.data - Q_mod.data
 
         # construct loss function
         loss = -td_error * Q_mod * mask
