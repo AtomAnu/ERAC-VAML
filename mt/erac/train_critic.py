@@ -202,7 +202,7 @@ def train(epoch):
 
         if args.use_unsuper_reward:
             R = utils.get_unsuper_rewards(GPTLM, tokenizer, XLM, bpe, dico, params, cos_sim, vocab, src, hyp,
-                                          inc_adequacy=args.include_adequacy, mu=args.mu, device)
+                                          inc_adequacy=args.include_adequacy, mu=args.mu, device=device)
             if R.device != device: R = R.to('cuda')
 
             #to-be-removed
