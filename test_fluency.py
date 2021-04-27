@@ -32,13 +32,18 @@ import html
 # Load pre-trained model (weights)
 model = OpenAIGPTLMHeadModel.from_pretrained('openai-gpt')
 model.eval()
+if torch.cuda.is_available():
+    model.cuda()
+    device = 'cuda'
+else:
+    device = 'cpu'
 # Load pre-trained model tokenizer (vocabulary)
 tokenizer = OpenAIGPTTokenizer.from_pretrained('openai-gpt')
 
 def calculate_fluency(sentence):
     sentence = html.unescape(sentence)
     tokenize_input = tokenizer.tokenize(sentence)
-    tensor_input = torch.tensor([tokenizer.convert_tokens_to_ids(tokenize_input)])
+    tensor_input = torch.tensor([tokenizer.convert_tokens_to_ids(tokenize_input)]).to(device)
     loss=model(tensor_input, lm_labels=tensor_input)
 
     return math.exp(loss)
@@ -101,7 +106,7 @@ fluency_scores = []
 for i in range(1, len(sample_words)):
 
     sent_ids += tokenizer.convert_tokens_to_ids(tokenizer.tokenize(sample_words[i]))
-    tensor_input = torch.tensor([sent_ids])
+    tensor_input = torch.tensor([sent_ids]).to(device)
     fluency_scores.append(calculate_fluency(tensor_input))
 
 end = time.time()
