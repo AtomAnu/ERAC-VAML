@@ -87,6 +87,8 @@ def load_data(src_path, tgt_path):
                 src_symbols = src_file.readline().strip().split()
                 tgt_symbols = tgt_file.readline().strip().split()
 
+            print(tgt_symbols)
+
             if not src_symbols or not tgt_symbols:
                 if src_symbols and not tgt_symbols or not src_symbols and tgt_symbols:
                     print('WARNING: source and target do not have the same number of sentences')
