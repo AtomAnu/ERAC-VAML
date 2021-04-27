@@ -199,6 +199,8 @@ def train(epoch):
         # compute rewards
         ref, hyp = utils.prepare_for_bleu(tgt, seq, eos_idx=eos_idx, pad_idx=tgt_pad_idx, unk_idx=tgt_unk_idx)
         bleu_R, score = utils.get_rewards(bleu_metric, hyp, ref, return_bleu=True)
+        _, dummy = utils.get_rewards(bleu_metric, ref, ref, return_bleu=True)
+        print(dummy)
 
         if args.use_unsuper_reward:
             R = utils.get_unsuper_rewards(GPTLM, tokenizer, XLM, bpe, dico, params, cos_sim, vocab, src, hyp,
