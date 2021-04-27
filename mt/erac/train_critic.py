@@ -199,9 +199,6 @@ def train(epoch):
         # compute rewards
         ref, hyp = utils.prepare_for_bleu(tgt, seq, eos_idx=eos_idx, pad_idx=tgt_pad_idx, unk_idx=tgt_unk_idx)
         bleu_R, score = utils.get_rewards(bleu_metric, hyp, ref, return_bleu=True)
-        _, dummy = utils.get_rewards(bleu_metric, ref, ref, return_bleu=True)
-        print(score)
-        print(dummy)
 
         if args.use_unsuper_reward:
             R = utils.get_unsuper_rewards(GPTLM, tokenizer, XLM, bpe, dico, params, cos_sim, vocab, src, hyp,
@@ -269,7 +266,7 @@ def train(epoch):
             logging('| epoch {:3d} | {:4d}/{:4d} batches | lr {:.6f} | ms/batch {:5.1f} | '
                     'td error {:5.3f} | score {:5.3f}'.format(
                 epoch, batch, tr_iter.num_batch(), optimizer.param_groups[0]['lr'],
-                elapsed * 1000 / args.log_interval, sum_res / cnt_tok, sum_score / cnt_sent))
+                elapsed * 1000 / args.log_interval, sum_res / cnt_tok, sum_score / cnt_sent * 100))
             start_time = time.time()
             sum_res, cnt_tok = 0, 0
             sum_score, cnt_sent = 0, 0
