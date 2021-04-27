@@ -101,7 +101,7 @@ def get_unsuper_rewards(lm, tokenizer,
 
         for j in range(0, len(hyp_words)):
 
-            hyp_ids += tokenizer.convert_tokens_to_ids(tokenizer.tokenize(sample_words[j]))
+            hyp_ids += tokenizer.convert_tokens_to_ids(tokenizer.tokenize(hyp_words[j]))
 
             if j == 0 or len(hyp_words) == 0:
                 curr_fluency = 0
