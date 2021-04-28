@@ -309,7 +309,7 @@ def evaluate(iterator):
         
         # compute target value : `Q_hat(s, a) = r(s, a) + V_bar(s')`
         Q_hat = R.clone().detach().requires_grad_(True)
-        Q_hat.data[:-1] += V_bar.data[1:]
+        Q_hat.data[:-1] += V_hat.data[1:]
 
         # compute TD error : `td_error = Q_hat - Q_mod`
         td_error = Q_hat.data - Q_mod.data
