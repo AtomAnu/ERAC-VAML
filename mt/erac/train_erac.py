@@ -121,6 +121,7 @@ else:
     logging('==> Load pretrained critic')
     critic = torch.load(args.critic_path)
     critic.flatten_parameters()
+    logging('    - number of params: {}'.format(sum(p.data.nelement() for p in critic.parameters())))
     logging('    - model path: {}'.format(args.critic_path))
     logging('    - decoder tau: {}'.format(critic.dec_tau))
     if args.tau is None:
