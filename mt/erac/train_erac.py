@@ -129,6 +129,7 @@ else:
     logging('==> Load pretrained actor')
     actor = torch.load(args.actor_path)
     actor.flatten_parameters()
+    logging('    - number of params: {}'.format(sum(p.data.nelement() for p in actor.parameters())))
     logging('    - model path: {}'.format(args.actor_path))
     logging('    - decoder tau: {}'.format(actor.dec_tau))
 
