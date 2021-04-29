@@ -74,6 +74,11 @@ args.use_tgtnet = not args.no_tgtnet
 #     else:
 #         torch.cuda.manual_seed(args.seed)
 
+if args.cuda:
+    device = 'cuda'
+else:
+    device = 'cpu'
+
 if args.test_only:
     ##### init logger
     logging = utils.create_exp_dir(args.work_dir, scripts_to_save=['train_erac.py'], debug=True)
@@ -144,6 +149,7 @@ else:
         # load pre-trained language model (weights)
         GPTLM = OpenAIGPTLMHeadModel.from_pretrained('openai-gpt')
         GPTLM.eval()
+        if args.cuda: GPTLM.cuda()
         # load pre-trained model tokenizer (vocabulary)
         tokenizer = OpenAIGPTTokenizer.from_pretrained('openai-gpt')
 
@@ -166,6 +172,7 @@ else:
         # build model
         XLM = TransformerModel(params, dico, True, True)
         XLM.eval()
+        if args.cuda: XLM.cuda()
         XLM.load_state_dict(reloaded['model'])
 
         # paths for BPE codes and vocabs
@@ -204,13 +211,12 @@ def train_erac(src, tgt):
 
     if args.use_unsuper_reward:
         R = utils.get_unsuper_rewards(GPTLM, tokenizer, XLM, bpe, dico, params, cos_sim, vocab, src, hyp,
-                                      inc_adequacy=args.include_adequacy, mu=args.mu)
-        R = R.to('cuda')
+                                      inc_adequacy=args.include_adequacy, mu=args.mu, device=device)
     else:
         R = bleu_R
-    print('Src shape: {} | Hyp shape: {} | Ref shape: {} | Reward shape: {}'.format(src.size(),hyp.size(),ref.size(),R.size()))
-    print('######## Reward ##########')
-    print(R)
+    # print('Src shape: {} | Hyp shape: {} | Ref shape: {} | Reward shape: {}'.format(src.size(),hyp.size(),ref.size(),R.size()))
+    # print('######## Reward ##########')
+    # print(R)
     # src_sents = []
     # hyp_sents = []
     # for src_sent, hyp_sent in zip(src.permute(1,0),hyp):
@@ -312,8 +318,8 @@ def train(epoch):
         # optimization
         act_optimizer.zero_grad()
         # (loss_act).backward()
-        (args.mle_coeff * loss_mle).backward()
-        # (loss_act + args.mle_coeff * loss_mle).backward()
+        # (args.mle_coeff * loss_mle).backward()
+        (loss_act + args.mle_coeff * loss_mle).backward()
         gnorm_act = nn.utils.clip_grad_norm(actor.parameters(), args.grad_clip)
         act_optimizer.step()
 
@@ -327,6 +333,8 @@ def train(epoch):
 
         # logging 
         if batch % args.log_interval == 0:
+            print(sum_res)
+            print(cnt_tok)
             elapsed = time.time() - start_time
             logging('| epoch {:3d} | {:4d}/{:4d} batches | lr {:.6f} {:.6f} | ms/batch {:5.1f} | '
                     'ppl {:5.2f} | td error {:.4f} | reward {:.4f} | sent bleu {:6.3f} '.format(
