@@ -314,8 +314,10 @@ def train(epoch):
 
         # print(loss_act)
         # print(args.mle_coeff * loss_mle)
-
         loss_total = loss_act + args.mle_coeff * loss_mle
+        print(loss_act.device)
+        print(loss_mle.device)
+        print(loss_total.device)
         # optimization
         act_optimizer.zero_grad()
         # (loss_act).backward()
