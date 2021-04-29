@@ -315,7 +315,7 @@ def train(epoch):
         # print(loss_act)
         # print(loss_mle)
         # print(args.mle_coeff * loss_mle)
-        loss_total = loss_act + args.mle_coeff * loss_mle
+        loss_total = loss_act.clone().detach().requires_grad_(True) + args.mle_coeff * loss_mle.clone().detach().requires_grad_(True)
         print(loss_total)
         # optimization
         act_optimizer.zero_grad()
