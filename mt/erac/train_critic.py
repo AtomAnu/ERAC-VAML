@@ -218,6 +218,7 @@ def train(epoch):
         act_dist = act_log_dist.exp()
 
         if args.use_tgtnet:
+            if tgt.requires_grad: print('tgt requires grad')
             tgt_volatile = tgt.data.clone().detach().requires_grad_(True)
             seq_volatile = seq.data.clone().detach().requires_grad_(True)
             Q_all_bar = tgt_critic(tgt_volatile, seq_volatile, out_mode=models.LOGIT)

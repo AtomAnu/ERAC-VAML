@@ -197,7 +197,6 @@ def train_erac(src, tgt):
     ##### Policy execution (actor)
     # sample sequence from the actor
     max_len = min(tgt.size(0) + 10, 50)
-    print('Max len: {}'.format(max_len))
     # max_len = min(tgt.size(0) + 5, 50)
     seq, act_log_dist = actor.sample(src, k=args.nsample, max_len=max_len)
 
@@ -208,34 +207,12 @@ def train_erac(src, tgt):
     # compute rewards
     ref, hyp = utils.prepare_for_bleu(tgt, seq, eos_idx=eos_idx, pad_idx=tgt_pad_idx, unk_idx=tgt_unk_idx)
     bleu_R, bleu = utils.get_rewards(bleu_metric, hyp, ref, return_bleu=True)
-    print(bleu_R.requires_grad)
 
     if args.use_unsuper_reward:
         R = utils.get_unsuper_rewards(GPTLM, tokenizer, XLM, bpe, dico, params, cos_sim, vocab, src, hyp,
                                       inc_adequacy=args.include_adequacy, mu=args.mu, device=device)
     else:
         R = bleu_R
-    # print('Src shape: {} | Hyp shape: {} | Ref shape: {} | Reward shape: {}'.format(src.size(),hyp.size(),ref.size(),R.size()))
-    # print('######## Reward ##########')
-    # print(R)
-    # src_sents = []
-    # hyp_sents = []
-    # for src_sent, hyp_sent in zip(src.permute(1,0),hyp):
-    #     print('***********************************')
-    #     print(hyp_sent.contiguous().data.cpu().view(-1))
-    #     src_sent = vocab['src'].convert_to_sent(src_sent.contiguous().data.cpu().view(-1), exclude=[src_pad_idx])
-    #     hyp_sent = vocab['tgt'].convert_to_sent(hyp_sent.contiguous().data.cpu().view(-1), exclude=[tgt_pad_idx, eos_idx])
-    #     src_sents.append(src_sent)
-    #     hyp_sents.append(hyp_sent)
-    #
-    # print('Src Sents: {}'.format(src_sents))
-    # print('Hyp Sents: {}'.format(hyp_sents))
-    #
-    # fluency = utils.get_fluency_scores(GPTLM, tokenizer, hyp_sents)
-    # print('Fluency: {}'.format(fluency))
-    #
-    # adequacy = utils.get_adequacy_scores(XLM, bpe, dico, params, cos_sim, src_sents, hyp_sents)
-    # print('Adequacy: {}'.format(adequacy))
 
     ##### Policy evaluation (critic)
     # compute Q value estimated by the critic
@@ -250,6 +227,7 @@ def train_erac(src, tgt):
     act_log_dist.data.masked_fill_(seq.data[1:].eq(tgt_pad_idx)[:,:,None], 0.)
 
     if args.use_tgtnet:
+        if tgt.requires_grad: print('tgt requires grad')
         tgt_volatile = tgt.data.clone().detach().requires_grad_(True)
         seq_volatile = seq.data.clone().detach().requires_grad_(True)
         Q_all_bar = tgt_critic(tgt_volatile, seq_volatile, out_mode=models.LOGIT)
