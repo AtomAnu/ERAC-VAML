@@ -227,7 +227,6 @@ def train_erac(src, tgt):
     act_log_dist.data.masked_fill_(seq.data[1:].eq(tgt_pad_idx)[:,:,None], 0.)
 
     if args.use_tgtnet:
-        if tgt.requires_grad: print('tgt requires grad')
         tgt_volatile = tgt.data.clone().detach().requires_grad_(True)
         seq_volatile = seq.data.clone().detach().requires_grad_(True)
         Q_all_bar = tgt_critic(tgt_volatile, seq_volatile, out_mode=models.LOGIT)
@@ -237,7 +236,7 @@ def train_erac(src, tgt):
         V_bar = (act_dist.data * (Q_all.data - critic.dec_tau * act_log_dist.data)).sum(2) * mask.data
 
     # compute target value : `Q_hat(s, a) = r(s, a) + V_bar(s')`
-    Q_hat = R.clone().detach().requires_grad_(True)
+    Q_hat = R.clone().detach()
     Q_hat.data[:-1] += V_bar.data[1:]
 
     # compute TD error : `td_error = Q_hat - Q_mod`
@@ -291,7 +290,7 @@ def train(epoch):
         cnt_sent += bleu.nelement()
 
         # print(loss_act)
-        loss_total = loss_act.clone().detach().requires_grad_(True) + args.mle_coeff * loss_mle.clone().detach().requires_grad_(True)
+        loss_total = loss_act + args.mle_coeff * loss_mle
         # print(loss_total)
         # optimization
         act_optimizer.zero_grad()
