@@ -312,10 +312,11 @@ def train(epoch):
         cnt_word += mask.data.sum()
         cnt_sent += bleu.nelement()
 
-        print(loss_act)
-        print(loss_mle)
+        # print(loss_act)
+        # print(loss_mle)
         # print(args.mle_coeff * loss_mle)
-        loss_total = loss_mle + args.mle_coeff * loss_mle
+        loss_total = loss_act + args.mle_coeff * loss_mle
+        print(loss_total)
         # optimization
         act_optimizer.zero_grad()
         # (loss_act).backward()
