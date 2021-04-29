@@ -285,8 +285,9 @@ def train_mle(src, tgt):
     mask = tgt[1:].ne(tgt_pad_idx).float()
 
     log_act_dist = actor(src, tgt)
+    print(log_act_dist)
     nll = -log_act_dist.gather(2, tgt[1:].unsqueeze(2).to(torch.int64)).squeeze(2) * mask
-
+    print(nll)
     loss = nll.sum(0).mean()
 
     return loss, nll, mask.data.sum()
@@ -313,11 +314,6 @@ def train(epoch):
         cnt_sent += bleu.nelement()
 
         # print(loss_act)
-        # print(loss_mle)
-        # print(args.mle_coeff * loss_mle)
-        print(loss_act)
-        dummy = loss_act.clone().detach().requires_grad_(True)
-        print(dummy)
         loss_total = loss_act.clone().detach().requires_grad_(True) + args.mle_coeff * loss_mle.clone().detach().requires_grad_(True)
         # print(loss_total)
         # optimization
