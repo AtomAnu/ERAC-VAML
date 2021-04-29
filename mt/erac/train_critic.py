@@ -238,11 +238,9 @@ def train(epoch):
 
         # compute TD error : `td_error = Q_hat - Q_mod`
         td_error = Q_hat.data - Q_mod.data
-        if not td_error.requires_grad: print('TD Error does not require grad')
 
         # construct loss function
         loss = -td_error * Q_mod * mask
-        if not loss.requires_grad: print('Loss does not require grad')
         if args.smooth_coeff > 0:
             loss += args.smooth_coeff * Q_all.var(2)
         loss = loss.sum(0).mean() 
