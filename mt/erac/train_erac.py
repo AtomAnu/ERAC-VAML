@@ -315,11 +315,12 @@ def train(epoch):
         # print(loss_act)
         # print(args.mle_coeff * loss_mle)
 
+        loss_total = loss_act + args.mle_coeff * loss_mle
         # optimization
         act_optimizer.zero_grad()
         # (loss_act).backward()
         # (args.mle_coeff * loss_mle).backward()
-        (loss_act + args.mle_coeff * loss_mle).backward()
+        loss_total.backward()
         gnorm_act = nn.utils.clip_grad_norm(actor.parameters(), args.grad_clip)
         act_optimizer.step()
 
