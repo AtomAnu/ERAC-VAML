@@ -233,11 +233,12 @@ def train(epoch):
                 V_bar = (act_dist * Q_all.data).sum(2) * mask.data
 
         # compute target value : `Q_hat(s, a) = r(s, a) + V_bar(s')`
-        Q_hat = R.clone().detach().requires_grad_(True)
+        Q_hat = R.clone().detach()
         Q_hat.data[:-1] += V_bar.data[1:]
 
         # compute TD error : `td_error = Q_hat - Q_mod`
         td_error = Q_hat.data - Q_mod.data
+        if not td_error.requires_grad: print('TD Error does not require grad')
 
         # construct loss function
         loss = -td_error * Q_mod * mask
