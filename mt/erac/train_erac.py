@@ -208,7 +208,7 @@ def train_erac(src, tgt):
     # compute rewards
     ref, hyp = utils.prepare_for_bleu(tgt, seq, eos_idx=eos_idx, pad_idx=tgt_pad_idx, unk_idx=tgt_unk_idx)
     bleu_R, bleu = utils.get_rewards(bleu_metric, hyp, ref, return_bleu=True)
-    print(bleu_R)
+    print(bleu_R.requires_grad)
 
     if args.use_unsuper_reward:
         R = utils.get_unsuper_rewards(GPTLM, tokenizer, XLM, bpe, dico, params, cos_sim, vocab, src, hyp,
