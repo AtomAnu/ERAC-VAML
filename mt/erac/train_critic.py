@@ -328,10 +328,6 @@ def evaluate(iterator):
 try:
     best_res = float('inf')
     for epoch in range(args.epochs):
-
-        # to-be-removed
-        if epoch < 3: continue
-
         logging('='*89)
         train(epoch)
         logging('='*89)
