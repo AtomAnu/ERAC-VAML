@@ -286,9 +286,7 @@ def train_mle(src, tgt):
     mask = tgt[1:].ne(tgt_pad_idx).float()
 
     log_act_dist = actor(src, tgt)
-    print(log_act_dist)
     nll = -log_act_dist.gather(2, tgt[1:].unsqueeze(2).to(torch.int64)).squeeze(2) * mask
-    print(nll)
     loss = nll.sum(0).mean()
 
     return loss, nll, mask.data.sum()
