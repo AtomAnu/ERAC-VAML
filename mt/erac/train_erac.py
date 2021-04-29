@@ -335,7 +335,7 @@ def train(epoch):
         # logging 
         if batch % args.log_interval == 0:
             print(sum_res)
-            print(cnt_tok)
+            print(cnt_word)
             elapsed = time.time() - start_time
             logging('| epoch {:3d} | {:4d}/{:4d} batches | lr {:.6f} {:.6f} | ms/batch {:5.1f} | '
                     'ppl {:5.2f} | td error {:.4f} | reward {:.4f} | sent bleu {:6.3f} '.format(
