@@ -3,7 +3,7 @@ from transformers import OpenAIGPTTokenizer, OpenAIGPTLMHeadModel
 
 tokenizer = OpenAIGPTTokenizer.from_pretrained('openai-gpt')
 model = OpenAIGPTLMHeadModel.from_pretrained('openai-gpt')
-
+model.eval()
 inputs = tokenizer("Hello, my dog is cute", return_tensors="pt")
 outputs = model(**inputs, labels=inputs["input_ids"])
 loss = outputs.loss
