@@ -1,5 +1,5 @@
 import torch
-from transformers import OpenAIGPTTokenizer, OpenAIGPTLMHeadModel
+from pytorch_pretrained_bert import OpenAIGPTTokenizer, OpenAIGPTLMHeadModel
 
 tokenizer = OpenAIGPTTokenizer.from_pretrained('openai-gpt')
 model = OpenAIGPTLMHeadModel.from_pretrained('openai-gpt')
