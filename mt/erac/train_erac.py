@@ -201,10 +201,12 @@ def train_erac(src, tgt):
     max_len = min(tgt.size(0) + 10, 50)
     # max_len = min(tgt.size(0) + 5, 50)
     seq, act_log_dist = actor.sample(src, k=args.nsample, max_len=max_len)
-
+    print('seq: {}'.format(seq.requires_grad))
+    print('act_log_dist: {}'.format(act_log_dist.requires_grad))
     seq = seq.view(seq.size(0), -1)
     mask = seq[1:].ne(tgt_pad_idx).float()
     act_dist = act_log_dist.exp()
+    print('act_dist: {}'.format(act_dist.requires_grad))
 
     # compute rewards
     ref, hyp = utils.prepare_for_bleu(tgt, seq, eos_idx=eos_idx, pad_idx=tgt_pad_idx, unk_idx=tgt_unk_idx)
@@ -220,45 +222,51 @@ def train_erac(src, tgt):
     # compute Q value estimated by the critic
     Q_all = critic(tgt, seq, out_mode=models.LOGIT)
     # print(Q_all)
-
+    print('Q_all: {}'.format(Q_all.requires_grad))
     # compute Q(y_{<t}, y_t)
     Q_mod = Q_all.gather(2, seq[1:].unsqueeze(2).to(torch.int64)).squeeze(2)
     # print(Q_mod)
-
+    print('Q_mod: {}'.format(Q_mod.requires_grad))
     # compute V_bar(y_{<t})
     act_log_dist.data.masked_fill_(seq.data[1:].eq(tgt_pad_idx)[:,:,None], 0.)
-
+    print('act_log_dist: {}'.format(act_log_dist.requires_grad))
     if args.use_tgtnet:
         tgt_volatile = tgt.data.clone().detach().requires_grad_(True)
         seq_volatile = seq.data.clone().detach().requires_grad_(True)
         Q_all_bar = tgt_critic(tgt_volatile, seq_volatile, out_mode=models.LOGIT)
-
+        print('Q_all_bar: {}'.format(Q_all_bar.requires_grad))
         V_bar = (act_dist.data * (Q_all_bar.data - critic.dec_tau * act_log_dist.data)).sum(2) * mask.data
+        print('V_bar: {}'.format(V_bar.requires_grad))
     else:
         V_bar = (act_dist.data * (Q_all.data - critic.dec_tau * act_log_dist.data)).sum(2) * mask.data
 
     # compute target value : `Q_hat(s, a) = r(s, a) + V_bar(s')`
-    Q_hat = R.clone().detach()
+    Q_hat = R.clone()
+    print('Q_hat: {}'.format(Q_hat.requires_grad))
     Q_hat.data[:-1] += V_bar.data[1:]
-
+    print('Q_hat: {}'.format(Q_hat.requires_grad))
     # compute TD error : `td_error = Q_hat - Q_mod`
     td_error = Q_hat.data - Q_mod.data
     # print(td_error)
-
+    print('TD Error: {}'.format(td_error.requires_grad))
     # critic loss
     loss_crt = -td_error * Q_mod
+    print('Loss Crt: {}'.format(loss_crt.requires_grad))
     if args.smooth_coeff > 0:
         loss_crt += args.smooth_coeff * Q_all.var(2)
     loss_crt = loss_crt.sum(0).mean()
-
+    print('Loss Crt: {}'.format(loss_crt.requires_grad))
     # actor loss
     pg_signal = Q_all.data
+    print('PG Signal: {}'.format(pg_signal.requires_grad))
     if args.tau > 0:
         # normalize to avoid unstability
         pg_signal -= args.tau * act_log_dist.data / (1e-8 + act_log_dist.data.norm(p=2, dim=2, keepdim=True))
+        print('PG Signal: {}'.format(pg_signal.requires_grad))
     loss_act = -(pg_signal * act_dist).sum(2) * mask
+    print('Loss Act: {}'.format(loss_act.requires_grad))
     loss_act = loss_act.sum(0).mean()
-
+    print('Loss Act: {}'.format(loss_act.requires_grad))
     return loss_crt, loss_act, mask, td_error, R, bleu
 
 def train_mle(src, tgt):
