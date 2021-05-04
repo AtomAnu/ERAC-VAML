@@ -205,6 +205,7 @@ def train_erac(src, tgt):
     print('act_log_dist: {}'.format(act_log_dist.requires_grad))
     seq = seq.view(seq.size(0), -1)
     mask = seq[1:].ne(tgt_pad_idx).float()
+    print('Mask: {}'.format(mask.requires_grad))
     act_dist = act_log_dist.exp()
     print('act_dist: {}'.format(act_dist.requires_grad))
 
