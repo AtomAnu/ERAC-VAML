@@ -244,14 +244,12 @@ def train_erac(src, tgt):
 
     # actor loss
     pg_signal = Q_all.data
-    print(pg_signal.shape)
-    print(act_dist.shape)
+
     if args.tau > 0:
         # normalize to avoid unstability
         pg_signal -= args.tau * act_log_dist.data / (1e-8 + act_log_dist.data.norm(p=2, dim=2, keepdim=True))
 
     # loss_act = -(Variable(pg_signal) * act_dist).sum(2) * mask
-    print(act_log_dist.exp()[:,:,:5])
     loss_act = act_log_dist.exp()[:,:,:5].sum(2) * mask
     loss_act = loss_act.sum(0).mean()
 
