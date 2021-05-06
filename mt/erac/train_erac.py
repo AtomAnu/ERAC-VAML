@@ -289,13 +289,13 @@ def train(epoch):
         cnt_sent += bleu.nelement()
 
         # print(loss_act)
-        loss_total = loss_act + args.mle_coeff * loss_mle
+        # loss_total = loss_act + args.mle_coeff * loss_mle
         # print(loss_total)
         # optimization
         act_optimizer.zero_grad()
-        # (loss_act).backward()
+        (loss_act).backward()
         # (args.mle_coeff * loss_mle).backward()
-        loss_total.backward()
+        # loss_total.backward()
         gnorm_act = nn.utils.clip_grad_norm_(actor.parameters(), args.grad_clip)
         act_optimizer.step()
 
