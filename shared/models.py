@@ -599,6 +599,9 @@ class Seq2Seq(nn.Module):
             enc_out, init_hid, pad_mask = map(functools.partial(replicate, n=nrep), 
                 [enc_out, init_hid, pad_mask])
 
+        print(enc_out)
+        print(enc_hid)
+
         if ret_rnn_out:
             dec_out, rnn_out, dec_hid = self.decoder(tgt[:-1], init_hid, enc_out, pad_mask=pad_mask, 
                 extra_inp=extra_inp, out_mode=out_mode, ret_rnn_out=ret_rnn_out)
