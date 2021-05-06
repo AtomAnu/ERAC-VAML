@@ -270,8 +270,10 @@ def train(epoch):
     start_time = time.time()
     sum_nll, sum_res, sum_rwd, sum_bleu = 0, 0, 0, 0
     cnt_nll, cnt_word, cnt_sent = 0, 0, 0
+    tmp_cnt = 0
     for batch, (src, tgt) in enumerate(tr_iter, start=1):
-
+        print(tmp_cnt)
+        tmp_cnt += 1
         loss_crt, loss_act, mask, td_error, R, bleu = train_erac(src, tgt)
 
         loss_mle, nll, cnt = train_mle(src, tgt)
