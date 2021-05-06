@@ -592,17 +592,17 @@ class Seq2Seq(nn.Module):
         enc_out, enc_hid, pad_mask = self.encoder(src)
         init_hid = self.init_dec_hidden(enc_hid)
 
-        print('MLE *********')
-        print(enc_out)
-        print(enc_hid)
+        # print('MLE *********')
+        # print(enc_out)
+        # print(enc_hid)
 
         if tgt.size(1) > src.size(1) and tgt.size(1) % src.size(1) == 0:
             nrep = tgt.size(1) // src.size(1)
             enc_out, init_hid, pad_mask = map(functools.partial(replicate, n=nrep), 
                 [enc_out, init_hid, pad_mask])
-        print('After MLE *********')
-        print(enc_out)
-        print(enc_hid)
+        # print('After MLE *********')
+        # print(enc_out)
+        # print(enc_hid)
 
         if ret_rnn_out:
             dec_out, rnn_out, dec_hid = self.decoder(tgt[:-1], init_hid, enc_out, pad_mask=pad_mask, 
