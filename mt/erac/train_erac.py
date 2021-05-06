@@ -201,6 +201,7 @@ def train_erac(src, tgt):
     # max_len = min(tgt.size(0) + 10, 50)
     max_len = min(tgt.size(0) + 5, 50)
     seq, act_log_dist = actor.sample(src, k=args.nsample, max_len=max_len)
+
     seq = seq.view(seq.size(0), -1)
     mask = seq[1:].ne(tgt_pad_idx).float()
     act_dist = act_log_dist.exp()
@@ -223,18 +224,22 @@ def train_erac(src, tgt):
     # compute V_bar(y_{<t})
     act_log_dist.data.masked_fill_(seq.data[1:].eq(tgt_pad_idx)[:,:,None], 0.)
     if args.use_tgtnet:
-        tgt_volatile = tgt.data.clone().detach().requires_grad_(True)
-        seq_volatile = seq.data.clone().detach().requires_grad_(True)
+        # tgt_volatile = tgt.data.clone().detach().requires_grad_(True)
+        # seq_volatile = seq.data.clone().detach().requires_grad_(True)
+        tgt_volatile = Variable(tgt.data, requires_grad=True)
+        seq_volatile = Variable(seq.data, requires_grad=True)
         Q_all_bar = tgt_critic(tgt_volatile, seq_volatile, out_mode=models.LOGIT)
+
         V_bar = (act_dist.data * (Q_all_bar.data - critic.dec_tau * act_log_dist.data)).sum(2) * mask.data
     else:
         V_bar = (act_dist.data * (Q_all.data - critic.dec_tau * act_log_dist.data)).sum(2) * mask.data
 
     # compute target value : `Q_hat(s, a) = r(s, a) + V_bar(s')`
     Q_hat = R.clone()
-    Q_hat.data[:-1] += V_bar.data[1:]
+    Q_hat[:-1] += V_bar[1:]
+
     # compute TD error : `td_error = Q_hat - Q_mod`
-    td_error = Q_hat.data - Q_mod.data
+    td_error = Variable(Q_hat - Q_mod.data)
 
     # critic loss
     loss_crt = -td_error * Q_mod
@@ -244,13 +249,12 @@ def train_erac(src, tgt):
 
     # actor loss
     pg_signal = Q_all.data
-
     if args.tau > 0:
         # normalize to avoid unstability
         pg_signal -= args.tau * act_log_dist.data / (1e-8 + act_log_dist.data.norm(p=2, dim=2, keepdim=True))
 
-    # loss_act = -(Variable(pg_signal) * act_dist).sum(2) * mask
-    loss_act = act_log_dist.exp()[:,:,:5].sum(2) * mask
+    loss_act = -(Variable(pg_signal) * act_dist).sum(2) * mask
+    # loss_act = act_log_dist.exp()[:,:,:5].sum(2) * mask
     loss_act = loss_act.sum(0).mean()
 
     return loss_crt, loss_act, mask, td_error, R, bleu
@@ -292,7 +296,8 @@ def train(epoch):
         # print(loss_total)
         # optimization
         act_optimizer.zero_grad()
-        (loss_act).backward()
+        (loss_act + args.mle_coeff * loss_mle).backward()
+        # (loss_act).backward()
         # (args.mle_coeff * loss_mle).backward()
         # loss_total.backward()
         gnorm_act = nn.utils.clip_grad_norm_(actor.parameters(), args.grad_clip)
