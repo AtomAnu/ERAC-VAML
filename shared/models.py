@@ -282,14 +282,13 @@ class Decoder(nn.Module):
             seq_dec_out = F.softmax(seq_logits, dim=-1)                       # [len x bs x ntoken]
         elif out_mode == LOG_PROB:
             seq_dec_out = torch.stack(log_probs).view(-1, bs*k, self.ntoken)  # [len x bs x ntoken]
+            print(log_probs)
+            print(seq_dec_out)
 
         if ret_rnn_out:
             seq_rnn_out = torch.cat(rnn_outs)                                 # [len x bs x nhid]
             return sequence, seq_dec_out, seq_rnn_out
         else:
-            print('......................')
-            print(sequence.device)
-            print(seq_dec_out.device)
             return sequence, seq_dec_out
 
     # def sample(self, hid, context, pad_mask, k, max_len, inp=None, eos_mask=None, temperature=1., out_mode=LOG_PROB, ret_rnn_out=False):
@@ -355,11 +354,8 @@ class Decoder(nn.Module):
         replicate_k = functools.partial(replicate, n=k)
 
         # create <bos> `inp` and range(k) `batch_id`
-        if inp is None:
-            inp = Variable(context.data.new(1, bs*k).long().fill_(self.bos_idx).float(), requires_grad=context.requires_grad)
-            print(inp.device)
-        else:
-            inp = replicate_k(inp)
+        inp = Variable(context.data.new(1, bs*k).long().fill_(self.bos_idx).float(), requires_grad=context.requires_grad)
+
         batch_id = Variable(replicate_k(inp.data.new(range(bs))), requires_grad=context.requires_grad)
 
         # repeat `hid`, `context`, `pad_mask` for k times
@@ -370,10 +366,7 @@ class Decoder(nn.Module):
         pad_prob = context.data.new(1, self.ntoken).float().fill_(-float('inf'))
         print(pad_prob.device)
         pad_prob[0, self.pad_idx] = 0
-        if eos_mask is None:
-            eos_mask = context.data.new(bs, k).byte().fill_(0)
-        else:
-            eos_mask = replicate_k(eos_mask)
+        eos_mask = context.data.new(bs, k).byte().fill_(0)
 
         tokens = [inp.clone().view(bs, k)]
         rnn_outs, logits, log_probs = [], [], []
