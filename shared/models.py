@@ -282,8 +282,6 @@ class Decoder(nn.Module):
             seq_dec_out = F.softmax(seq_logits, dim=-1)                       # [len x bs x ntoken]
         elif out_mode == LOG_PROB:
             seq_dec_out = torch.stack(log_probs).view(-1, bs*k, self.ntoken)  # [len x bs x ntoken]
-            print(log_probs)
-            print(seq_dec_out)
 
         if ret_rnn_out:
             seq_rnn_out = torch.cat(rnn_outs)                                 # [len x bs x nhid]
@@ -594,11 +592,15 @@ class Seq2Seq(nn.Module):
         enc_out, enc_hid, pad_mask = self.encoder(src)
         init_hid = self.init_dec_hidden(enc_hid)
 
+        print('MLE *********')
+        print(enc_out)
+        print(enc_hid)
+
         if tgt.size(1) > src.size(1) and tgt.size(1) % src.size(1) == 0:
             nrep = tgt.size(1) // src.size(1)
             enc_out, init_hid, pad_mask = map(functools.partial(replicate, n=nrep), 
                 [enc_out, init_hid, pad_mask])
-
+        print('After MLE *********')
         print(enc_out)
         print(enc_hid)
 
