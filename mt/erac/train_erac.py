@@ -200,6 +200,7 @@ def train_erac(src, tgt):
     # sample sequence from the actor
     # max_len = min(tgt.size(0) + 10, 50)
     print(src.device)
+    print(actor.device)
     max_len = min(tgt.size(0) + 5, 50)
     seq, act_log_dist = actor.sample(src, k=args.nsample, max_len=max_len)
     seq = seq.view(seq.size(0), -1)
