@@ -250,7 +250,7 @@ def train_erac(src, tgt):
         # normalize to avoid unstability
         pg_signal -= args.tau * act_log_dist.data / (1e-8 + act_log_dist.data.norm(p=2, dim=2, keepdim=True))
     pg_signal = torch.ones(pg_signal.size(0),pg_signal.size(1),pg_signal.size(2)).to(device)
-    loss_act = -(pg_signal * act_dist).sum(2) * mask
+    loss_act = -(Variable(pg_signal) * act_dist).sum(2) * mask
     loss_act = loss_act.sum(0).mean()
 
     return loss_crt, loss_act, mask, td_error, R, bleu
