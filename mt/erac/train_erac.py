@@ -249,8 +249,9 @@ def train_erac(src, tgt):
     if args.tau > 0:
         # normalize to avoid unstability
         pg_signal -= args.tau * act_log_dist.data / (1e-8 + act_log_dist.data.norm(p=2, dim=2, keepdim=True))
-    pg_signal = torch.ones(pg_signal.size(0),pg_signal.size(1),pg_signal.size(2)).to(device)
-    loss_act = -(Variable(pg_signal) * act_dist).sum(2) * mask
+
+    # loss_act = -(Variable(pg_signal) * act_dist).sum(2) * mask
+    loss_act = act_dist.sum(2) * mask
     loss_act = loss_act.sum(0).mean()
 
     return loss_crt, loss_act, mask, td_error, R, bleu
@@ -259,12 +260,7 @@ def train_mle(src, tgt):
     mask = tgt[1:].ne(tgt_pad_idx).float()
 
     log_act_dist = actor(src, tgt)
-    print('#########')
-    print(log_act_dist)
-    print(log_act_dist.shape)
     nll = -log_act_dist.gather(2, tgt[1:].unsqueeze(2).to(torch.int64)).squeeze(2) * mask
-    print(nll)
-    print(nll.shape)
     loss = nll.sum(0).mean()
 
     return loss, nll, mask.data.sum()
