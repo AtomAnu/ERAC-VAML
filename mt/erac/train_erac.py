@@ -251,7 +251,7 @@ def train_erac(src, tgt):
         pg_signal -= args.tau * act_log_dist.data / (1e-8 + act_log_dist.data.norm(p=2, dim=2, keepdim=True))
 
     # loss_act = -(Variable(pg_signal) * act_dist).sum(2) * mask
-    loss_act = act_dist.sum(2) * mask
+    loss_act = act_log_dist.exp().sum(2) * mask
     loss_act = loss_act.sum(0).mean()
 
     return loss_crt, loss_act, mask, td_error, R, bleu
