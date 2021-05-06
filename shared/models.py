@@ -613,7 +613,8 @@ class Seq2Seq(nn.Module):
     def sample(self, src, k, max_len=100, inp=None, eos_mask=None, temperature=1., out_mode=LOG_PROB):
         enc_out, enc_hid, pad_mask = self.encoder(src)
         dec_hid = self.init_dec_hidden(enc_hid)
-
+        print(enc_out.requires_grad)
+        print(dec_hid.requires_grad)
         return self.decoder.sample(dec_hid, enc_out, pad_mask, k, max_len=max_len, 
             inp=inp, eos_mask=eos_mask, temperature=temperature, out_mode=out_mode)
 
