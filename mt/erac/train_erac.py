@@ -198,8 +198,8 @@ for k, v in args.__dict__.items():
 def train_erac(src, tgt):
     ##### Policy execution (actor)
     # sample sequence from the actor
-    max_len = min(tgt.size(0) + 10, 50)
-    # max_len = min(tgt.size(0) + 5, 50)
+    # max_len = min(tgt.size(0) + 10, 50)
+    max_len = min(tgt.size(0) + 5, 50)
     seq, act_log_dist = actor.sample(src, k=args.nsample, max_len=max_len)
     seq = seq.view(seq.size(0), -1)
     mask = seq[1:].ne(tgt_pad_idx).float()
