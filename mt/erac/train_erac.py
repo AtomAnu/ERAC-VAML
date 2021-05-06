@@ -207,6 +207,8 @@ def train_erac(src, tgt):
     mask = seq[1:].ne(tgt_pad_idx).float()
     print('Mask: {}'.format(mask.requires_grad))
     act_dist = act_log_dist.exp()
+    print(act_log_dist)
+    print(act_dist)
     print('act_dist: {}'.format(act_dist.requires_grad))
 
     # compute rewards
