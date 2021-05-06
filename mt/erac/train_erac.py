@@ -270,6 +270,7 @@ def train_erac(src, tgt):
     print('Loss Act: {}'.format(loss_act.requires_grad))
     loss_act = loss_act.sum(0).mean()
     print('Loss Act: {}'.format(loss_act.requires_grad))
+    print(loss_act)
     return loss_crt, loss_act, mask, td_error, R, bleu
 
 def train_mle(src, tgt):
