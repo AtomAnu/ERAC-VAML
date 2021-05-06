@@ -301,13 +301,13 @@ def train(epoch):
         gnorm_act = nn.utils.clip_grad_norm_(actor.parameters(), args.grad_clip)
         act_optimizer.step()
 
-        # crt_optimizer.zero_grad()
-        # loss_crt.backward()
-        # gnorm_crt = nn.utils.clip_grad_norm_(critic.parameters(), args.grad_clip)
-        # crt_optimizer.step()
-        #
-        # if args.use_tgtnet:
-        #     utils.slow_update(critic, tgt_critic, args.tgt_speed)
+        crt_optimizer.zero_grad()
+        loss_crt.backward()
+        gnorm_crt = nn.utils.clip_grad_norm_(critic.parameters(), args.grad_clip)
+        crt_optimizer.step()
+
+        if args.use_tgtnet:
+            utils.slow_update(critic, tgt_critic, args.tgt_speed)
 
         # logging 
         if batch % args.log_interval == 0:
