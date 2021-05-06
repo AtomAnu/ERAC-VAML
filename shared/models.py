@@ -282,12 +282,73 @@ class Decoder(nn.Module):
             seq_dec_out = F.softmax(seq_logits, dim=-1)                       # [len x bs x ntoken]
         elif out_mode == LOG_PROB:
             seq_dec_out = torch.stack(log_probs).view(-1, bs*k, self.ntoken)  # [len x bs x ntoken]
-        
+
         if ret_rnn_out:
             seq_rnn_out = torch.cat(rnn_outs)                                 # [len x bs x nhid]
             return sequence, seq_dec_out, seq_rnn_out
         else:
+            print('......................')
+            print(sequence.device)
+            print(seq_dec_out.device)
             return sequence, seq_dec_out
+
+    # def sample(self, hid, context, pad_mask, k, max_len, inp=None, eos_mask=None, temperature=1., out_mode=LOG_PROB, ret_rnn_out=False):
+    #     bs = context.size(1)
+    #     replicate_k = functools.partial(replicate, n=k)
+    #
+    #     # create <bos> `inp` and range(k) `batch_id`
+    #     if inp is None:
+    #         inp = Variable(context.data.new(1, bs*k).long().fill_(self.bos_idx).float(), requires_grad=context.requires_grad)
+    #     else:
+    #         inp = replicate_k(inp)
+    #     batch_id = Variable(replicate_k(inp.data.new(range(bs))), requires_grad=context.requires_grad)
+    #
+    #     # repeat `hid`, `context`, `pad_mask` for k times
+    #     context, hid, pad_mask = map(replicate_k, [context, hid, pad_mask])
+    #     att_out = None
+    #
+    #     # init helping structure `pad_prob`, `eos_mask` for variable-length decoding
+    #     pad_prob = context.data.new(1, self.ntoken).float().fill_(-float('inf'))
+    #     pad_prob[0, self.pad_idx] = 0
+    #     if eos_mask is None:
+    #         eos_mask = context.data.new(bs, k).byte().fill_(0)
+    #     else:
+    #         eos_mask = replicate_k(eos_mask)
+    #
+    #     tokens = [inp.clone().view(bs, k)]
+    #     rnn_outs, logits, log_probs = [], [], []
+    #     for i in range(max_len):
+    #         logit, rnn_out, hid, att_out = self.forward(inp, hid, context, pad_mask, att_out=att_out,
+    #             out_mode=LOGIT, ret_rnn_out=True, ret_att_out=True)
+    #         logit = logit.view(bs, k, self.ntoken)
+    #         log_prob = F.log_softmax(logit / self.tau, dim=-1)
+    #
+    #         if eos_mask is not None and eos_mask.sum() > 0:
+    #             log_prob.data.masked_scatter_(eos_mask.unsqueeze(2).to(torch.bool), pad_prob.expand(eos_mask.sum(), self.ntoken))
+    #         log_prob = log_prob.view(bs*k, self.ntoken)
+    #
+    #         # make sure the last token is <eos> if not finished yet
+    #         if i == max_len - 1:
+    #             token = Variable(inp.data.new(bs, k).fill_(self.eos_idx))
+    #             token.data.masked_fill_(eos_mask.to(torch.bool), self.pad_idx)
+    #             token = token.view(bs * k, 1)
+    #         else:
+    #             prob_rescaled = (log_prob / temperature).exp()
+    #             token = torch.multinomial(prob_rescaled, 1).detach()
+    #         inp = token.view(1, -1)
+    #
+    #         eos_mask = eos_mask | token.data.view_as(eos_mask).eq(self.eos_idx)
+    #
+    #         # record per-step states
+    #         rnn_outs.append(rnn_out)
+    #         logits.append(logit)
+    #         log_probs.append(log_prob)
+    #         tokens.append(token.view(bs, k))
+    #
+    #         if eos_mask.sum() == bs * k:
+    #             break
+    #
+    #     return self.return_samples(tokens, logits, log_probs, rnn_outs, bs, k, out_mode, ret_rnn_out)
 
     def sample(self, hid, context, pad_mask, k, max_len, inp=None, eos_mask=None, temperature=1., out_mode=LOG_PROB, ret_rnn_out=False):
         bs = context.size(1)
@@ -296,6 +357,7 @@ class Decoder(nn.Module):
         # create <bos> `inp` and range(k) `batch_id`
         if inp is None:
             inp = Variable(context.data.new(1, bs*k).long().fill_(self.bos_idx).float(), requires_grad=context.requires_grad)
+            print(inp.device)
         else:
             inp = replicate_k(inp)
         batch_id = Variable(replicate_k(inp.data.new(range(bs))), requires_grad=context.requires_grad)
@@ -306,6 +368,7 @@ class Decoder(nn.Module):
 
         # init helping structure `pad_prob`, `eos_mask` for variable-length decoding
         pad_prob = context.data.new(1, self.ntoken).float().fill_(-float('inf'))
+        print(pad_prob.device)
         pad_prob[0, self.pad_idx] = 0
         if eos_mask is None:
             eos_mask = context.data.new(bs, k).byte().fill_(0)
@@ -315,7 +378,7 @@ class Decoder(nn.Module):
         tokens = [inp.clone().view(bs, k)]
         rnn_outs, logits, log_probs = [], [], []
         for i in range(max_len):
-            logit, rnn_out, hid, att_out = self.forward(inp, hid, context, pad_mask, att_out=att_out, 
+            logit, rnn_out, hid, att_out = self.forward(inp, hid, context, pad_mask, att_out=att_out,
                 out_mode=LOGIT, ret_rnn_out=True, ret_att_out=True)
             logit = logit.view(bs, k, self.ntoken)
             log_prob = F.log_softmax(logit / self.tau, dim=-1)
@@ -323,15 +386,19 @@ class Decoder(nn.Module):
             if eos_mask is not None and eos_mask.sum() > 0:
                 log_prob.data.masked_scatter_(eos_mask.unsqueeze(2).to(torch.bool), pad_prob.expand(eos_mask.sum(), self.ntoken))
             log_prob = log_prob.view(bs*k, self.ntoken)
+            print(log_prob.device)
 
             # make sure the last token is <eos> if not finished yet
             if i == max_len - 1:
+                print('Last token')
                 token = Variable(inp.data.new(bs, k).fill_(self.eos_idx))
                 token.data.masked_fill_(eos_mask.to(torch.bool), self.pad_idx)
                 token = token.view(bs * k, 1)
+                print(token.device)
             else:
                 prob_rescaled = (log_prob / temperature).exp()
                 token = torch.multinomial(prob_rescaled, 1).detach()
+                print(token.device)
             inp = token.view(1, -1)
 
             eos_mask = eos_mask | token.data.view_as(eos_mask).eq(self.eos_idx)
