@@ -6,7 +6,7 @@ from xlm.utils import AttrDict
 from xlm.data.dictionary import Dictionary, BOS_WORD, EOS_WORD, PAD_WORD, UNK_WORD, MASK_WORD
 from xlm.model.transformer import TransformerModel
 import fastBPE
-
+import time
 # Reload a pre-trained model
 model_path = 'mlm_100_1280.pth'
 reloaded = torch.load(model_path)
@@ -32,6 +32,7 @@ sentences = ['Table', 'Katze']
 codes_path = 'codes_xnli_100'
 vocab_path = 'vocab_xnli_100'
 
+start = time.time()
 bpe = fastBPE.fastBPE(codes_path, vocab_path)
 sentences = bpe.apply(sentences)
 
@@ -70,3 +71,4 @@ de_tensor = embeddings[1].unsqueeze(0)
 cos = nn.CosineSimilarity()
 sim = cos(en_tensor, de_tensor)
 print(sim)
+print(time.time() - start)
