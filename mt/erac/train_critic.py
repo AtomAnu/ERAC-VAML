@@ -78,7 +78,7 @@ args.use_tgtnet = not args.no_tgtnet
 #         torch.cuda.manual_seed(args.seed)
 
 if args.cuda:
-    device = 'cuda'
+    device = 'cuda:0'
 else:
     device = 'cpu'
 
