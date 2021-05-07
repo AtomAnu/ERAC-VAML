@@ -10,5 +10,5 @@ TERM=vt100 # or TERM=xterm
 uptime
 conda activate erac
 cd /vol/bitbucket/aa8920/ERAC-VAML/mt/erac/
-python train_critic.py --cuda --actor_path PATH_TO_ACTOR_FOLDER/20210408-131727/model_best.pt --work_dir PATH_TO_CRITIC_FOLDER --use_unsuper_reward --include_adequacy --mu 1 --nsample 1 --train_bs 30 --valid_bs 30 --test_bs 30
+CUDA_VISIBLE_DEVICES=0 python train_critic.py --cuda --actor_path PATH_TO_ACTOR_FOLDER/20210408-131727/model_best.pt --work_dir PATH_TO_CRITIC_FOLDER --use_unsuper_reward --include_adequacy --mu 1 --nsample 1 --train_bs 30 --valid_bs 30 --test_bs 30
 conda deactivate
