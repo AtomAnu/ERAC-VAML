@@ -365,7 +365,7 @@ def evaluate(iterator):
 if not args.test_only:
     try:
         best_ppl, best_bleu = float('inf'), 0.
-        # curr_ppl, curr_bleu = evaluate(va_iter)
+        curr_ppl, curr_bleu = evaluate(va_iter)
         for epoch in range(args.epochs):
             logging('='*89)
             train(epoch)
@@ -398,8 +398,8 @@ if not args.test_only:
         logging("Best dev bleu {:.3f}".format(best_bleu))
 
 ##### testing
-# actor = torch.load(os.path.join(args.work_dir, 'model_best_actor.pt'))
-actor = torch.load(args.actor_path)
+actor = torch.load(os.path.join(args.work_dir, 'model_best_actor.pt'))
+# actor = torch.load(args.actor_path)
 actor.flatten_parameters()
 
 test = torch.load(args.save_data + '-test.pt')
