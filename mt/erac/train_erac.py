@@ -401,6 +401,7 @@ if not args.test_only:
 actor = torch.load(os.path.join(args.work_dir, 'model_best_actor.pt'))
 # actor = torch.load(args.actor_path)
 actor.flatten_parameters()
+if args.cuda: actor.cuda()
 
 test = torch.load(args.save_data + '-test.pt')
 te_iter = data.BucketParallelIterator(test['src'], test['tgt'], args.test_bs, src_pad_idx, tgt_pad_idx, 
