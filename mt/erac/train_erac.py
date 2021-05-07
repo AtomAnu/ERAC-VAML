@@ -398,7 +398,8 @@ if not args.test_only:
         logging("Best dev bleu {:.3f}".format(best_bleu))
 
 ##### testing
-actor = torch.load(os.path.join(args.work_dir, 'model_best_actor.pt'))
+# actor = torch.load(os.path.join(args.work_dir, 'model_best_actor.pt'))
+actor = torch.load(args.actor_path)
 actor.flatten_parameters()
 
 test = torch.load(args.save_data + '-test.pt')
