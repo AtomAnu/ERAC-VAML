@@ -127,6 +127,7 @@ def calculate_fluency(lm, hyp_ids_tensor):
     with torch.no_grad():
         loss = lm(hyp_ids_tensor, lm_labels=hyp_ids_tensor)
         fluency = 1/np.exp(loss.item())
+    print('Fluency: {}'.format(fluency))
     return fluency
 
 def calculate_adequacy(xlm, bpe, dico, params, cos_sim, src_sent, hyp_sent, device):
