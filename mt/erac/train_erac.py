@@ -345,6 +345,7 @@ def evaluate(iterator):
 
         # pytorch_bleu requires size [bsz x nref|nhyp x seqlen]
         ref, hyp = utils.prepare_for_bleu(tgt, hyps, eos_idx=eos_idx, pad_idx=tgt_pad_idx, unk_idx=tgt_unk_idx, exclude_unk=True)
+        print(hyp)
         bleu_metric.add_to_corpus(hyp, ref)
 
     # sanity check
