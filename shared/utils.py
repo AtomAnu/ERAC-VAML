@@ -131,31 +131,32 @@ def calculate_fluency(lm, hyp_ids_tensor):
 
 def calculate_adequacy(xlm, bpe, dico, params, cos_sim, src_sent, hyp_sent, device):
 
-    src_hyp_pair = [src_sent, hyp_sent]
-    sentences = bpe.apply(src_hyp_pair)
+    with torch.no_grad():
+        src_hyp_pair = [src_sent, hyp_sent]
+        sentences = bpe.apply(src_hyp_pair)
 
-    # add </s> sentence delimiters
-    sentences = [(('</s> %s </s>' % sent.strip()).split()) for sent in sentences]
+        # add </s> sentence delimiters
+        sentences = [(('</s> %s </s>' % sent.strip()).split()) for sent in sentences]
 
-    bs = len(sentences)
-    slen = max([len(sent) for sent in sentences])
+        bs = len(sentences)
+        slen = max([len(sent) for sent in sentences])
 
-    word_ids = torch.LongTensor(slen, bs).fill_(params.pad_index).to(device)
-    for i in range(len(sentences)):
-        sent = torch.LongTensor([dico.index(w) for w in sentences[i]])
-        word_ids[:len(sent), i] = sent
+        word_ids = torch.LongTensor(slen, bs).fill_(params.pad_index).to(device)
+        for i in range(len(sentences)):
+            sent = torch.LongTensor([dico.index(w) for w in sentences[i]])
+            word_ids[:len(sent), i] = sent
 
-    lengths = torch.LongTensor([len(sent) for sent in sentences]).to(device)
+        lengths = torch.LongTensor([len(sent) for sent in sentences]).to(device)
 
-    langs = None
+        langs = None
 
-    tensor = xlm('fwd', x=word_ids, lengths=lengths, langs=langs, causal=False).contiguous()
+        tensor = xlm('fwd', x=word_ids, lengths=lengths, langs=langs, causal=False).contiguous()
 
-    embeddings = tensor[0]
-    en_tensor = embeddings[0].unsqueeze(0)
-    de_tensor = embeddings[1].unsqueeze(0)
+        embeddings = tensor[0]
+        en_tensor = embeddings[0].unsqueeze(0)
+        de_tensor = embeddings[1].unsqueeze(0)
 
-    adequacy = cos_sim(en_tensor, de_tensor)
+        adequacy = cos_sim(en_tensor, de_tensor)
 
     return adequacy
 
