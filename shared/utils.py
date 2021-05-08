@@ -110,7 +110,6 @@ def get_unsuper_rewards(lm, tokenizer,
 
             if inc_adequacy:
                 hyp_sent_segment = ' '.join(word for word in hyp_words[:j+1])
-                print(hyp_sent_segment)
                 curr_adequacy = calculate_adequacy(xlm, bpe, dico, params, cos_sim, src_sent, hyp_sent_segment, device)
                 delta_adequacy = curr_adequacy - prev_adequacy
 
@@ -132,7 +131,7 @@ def calculate_fluency(lm, hyp_ids_tensor):
     return fluency
 
 def calculate_adequacy(xlm, bpe, dico, params, cos_sim, src_sent, hyp_sent, device):
-    print('yes')
+
     with torch.no_grad():
         src_hyp_pair = [src_sent, hyp_sent]
         sentences = bpe.apply(src_hyp_pair)
@@ -159,7 +158,7 @@ def calculate_adequacy(xlm, bpe, dico, params, cos_sim, src_sent, hyp_sent, devi
         de_tensor = embeddings[1].unsqueeze(0)
 
         adequacy = cos_sim(en_tensor, de_tensor)
-    print('Adequacy: {}'.format(adequacy))
+
     return adequacy
 
 def log_sum_exp(x, dim=-1, keepdim=False):
