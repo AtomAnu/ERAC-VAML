@@ -109,7 +109,9 @@ def get_unsuper_rewards(lm, tokenizer,
             delta_fluency = curr_fluency - prev_fluency
 
             if inc_adequacy:
-                curr_adequacy = calculate_adequacy(xlm, bpe, dico, params, cos_sim, src_sent, hyp_sent, device)
+                hyp_sent_segment = ' '.join(word for word in hyp_words[:j+1])
+                print(hyp_sent_segment)
+                curr_adequacy = calculate_adequacy(xlm, bpe, dico, params, cos_sim, src_sent, hyp_sent_segment, device)
                 delta_adequacy = curr_adequacy - prev_adequacy
 
                 curr_reward = delta_fluency + mu * delta_adequacy
@@ -127,7 +129,6 @@ def calculate_fluency(lm, hyp_ids_tensor):
     with torch.no_grad():
         loss = lm(hyp_ids_tensor, lm_labels=hyp_ids_tensor)
         fluency = 1/np.exp(loss.item())
-    print('Fluency: {}'.format(fluency))
     return fluency
 
 def calculate_adequacy(xlm, bpe, dico, params, cos_sim, src_sent, hyp_sent, device):
