@@ -282,7 +282,7 @@ class Decoder(nn.Module):
             seq_dec_out = F.softmax(seq_logits, dim=-1)                       # [len x bs x ntoken]
         elif out_mode == LOG_PROB:
             seq_dec_out = torch.stack(log_probs).view(-1, bs*k, self.ntoken)  # [len x bs x ntoken]
-        
+
         if ret_rnn_out:
             seq_rnn_out = torch.cat(rnn_outs)                                 # [len x bs x nhid]
             return sequence, seq_dec_out, seq_rnn_out
@@ -315,7 +315,7 @@ class Decoder(nn.Module):
         tokens = [inp.clone().view(bs, k)]
         rnn_outs, logits, log_probs = [], [], []
         for i in range(max_len):
-            logit, rnn_out, hid, att_out = self.forward(inp, hid, context, pad_mask, att_out=att_out, 
+            logit, rnn_out, hid, att_out = self.forward(inp, hid, context, pad_mask, att_out=att_out,
                 out_mode=LOGIT, ret_rnn_out=True, ret_att_out=True)
             logit = logit.view(bs, k, self.ntoken)
             log_prob = F.log_softmax(logit / self.tau, dim=-1)
@@ -346,6 +346,64 @@ class Decoder(nn.Module):
                 break
 
         return self.return_samples(tokens, logits, log_probs, rnn_outs, bs, k, out_mode, ret_rnn_out)
+
+    # def sample(self, hid, context, pad_mask, k, max_len, inp=None, eos_mask=None, temperature=1., out_mode=LOG_PROB, ret_rnn_out=False):
+    #     bs = context.size(1)
+    #     replicate_k = functools.partial(replicate, n=k)
+    #
+    #     # create <bos> `inp` and range(k) `batch_id`
+    #     inp = Variable(context.data.new(1, bs*k).long().fill_(self.bos_idx).float(), requires_grad=context.requires_grad)
+    #
+    #     batch_id = Variable(replicate_k(inp.data.new(range(bs))), requires_grad=context.requires_grad)
+    #
+    #     # repeat `hid`, `context`, `pad_mask` for k times
+    #     context, hid, pad_mask = map(replicate_k, [context, hid, pad_mask])
+    #     att_out = None
+    #
+    #     # init helping structure `pad_prob`, `eos_mask` for variable-length decoding
+    #     pad_prob = context.data.new(1, self.ntoken).float().fill_(-float('inf'))
+    #     print(pad_prob.device)
+    #     pad_prob[0, self.pad_idx] = 0
+    #     eos_mask = context.data.new(bs, k).byte().fill_(0)
+    #
+    #     tokens = [inp.clone().view(bs, k)]
+    #     rnn_outs, logits, log_probs = [], [], []
+    #     for i in range(max_len):
+    #         logit, rnn_out, hid, att_out = self.forward(inp, hid, context, pad_mask, att_out=att_out,
+    #             out_mode=LOGIT, ret_rnn_out=True, ret_att_out=True)
+    #         logit = logit.view(bs, k, self.ntoken)
+    #         log_prob = F.log_softmax(logit / self.tau, dim=-1)
+    #
+    #         if eos_mask is not None and eos_mask.sum() > 0:
+    #             log_prob.data.masked_scatter_(eos_mask.unsqueeze(2).to(torch.bool), pad_prob.expand(eos_mask.sum(), self.ntoken))
+    #         log_prob = log_prob.view(bs*k, self.ntoken)
+    #         print(log_prob.device)
+    #
+    #         # make sure the last token is <eos> if not finished yet
+    #         if i == max_len - 1:
+    #             print('Last token')
+    #             token = Variable(inp.data.new(bs, k).fill_(self.eos_idx))
+    #             token.data.masked_fill_(eos_mask.to(torch.bool), self.pad_idx)
+    #             token = token.view(bs * k, 1)
+    #             print(token.device)
+    #         else:
+    #             prob_rescaled = (log_prob / temperature).exp()
+    #             token = torch.multinomial(prob_rescaled, 1).detach()
+    #             print(token.device)
+    #         inp = token.view(1, -1)
+    #
+    #         eos_mask = eos_mask | token.data.view_as(eos_mask).eq(self.eos_idx)
+    #
+    #         # record per-step states
+    #         rnn_outs.append(rnn_out)
+    #         logits.append(logit)
+    #         log_probs.append(log_prob)
+    #         tokens.append(token.view(bs, k))
+    #
+    #         if eos_mask.sum() == bs * k:
+    #             break
+    #
+    #     return self.return_samples(tokens, logits, log_probs, rnn_outs, bs, k, out_mode, ret_rnn_out)
 
     def greedy_search(self, hid, context, pad_mask, max_len, inp=None, eos_mask=None, out_mode=LOG_PROB, ret_rnn_out=False):
         bs = context.size(1)
@@ -534,10 +592,17 @@ class Seq2Seq(nn.Module):
         enc_out, enc_hid, pad_mask = self.encoder(src)
         init_hid = self.init_dec_hidden(enc_hid)
 
+        # print('MLE *********')
+        # print(enc_out)
+        # print(enc_hid)
+
         if tgt.size(1) > src.size(1) and tgt.size(1) % src.size(1) == 0:
             nrep = tgt.size(1) // src.size(1)
             enc_out, init_hid, pad_mask = map(functools.partial(replicate, n=nrep), 
                 [enc_out, init_hid, pad_mask])
+        # print('After MLE *********')
+        # print(enc_out)
+        # print(enc_hid)
 
         if ret_rnn_out:
             dec_out, rnn_out, dec_hid = self.decoder(tgt[:-1], init_hid, enc_out, pad_mask=pad_mask, 
@@ -553,7 +618,8 @@ class Seq2Seq(nn.Module):
     def sample(self, src, k, max_len=100, inp=None, eos_mask=None, temperature=1., out_mode=LOG_PROB):
         enc_out, enc_hid, pad_mask = self.encoder(src)
         dec_hid = self.init_dec_hidden(enc_hid)
-
+        # print(enc_out)
+        # print(dec_hid)
         return self.decoder.sample(dec_hid, enc_out, pad_mask, k, max_len=max_len, 
             inp=inp, eos_mask=eos_mask, temperature=temperature, out_mode=out_mode)
 

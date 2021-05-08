@@ -8,7 +8,7 @@ from xlm.model.transformer import TransformerModel
 import fastBPE
 import time
 # Reload a pre-trained model
-model_path = 'mlm_100_1280.pth'
+model_path = 'mlm_17_1280.pth'
 reloaded = torch.load(model_path)
 params = AttrDict(reloaded['params'])
 print("Supported languages: %s" % ", ".join(params.lang2id.keys()))
@@ -29,8 +29,8 @@ model.load_state_dict(reloaded['model'])
 
 sentences = ['Table', 'Katze']
 
-codes_path = 'codes_xnli_100'
-vocab_path = 'vocab_xnli_100'
+codes_path = 'codes_xnli_17'
+vocab_path = 'vocab_xnli_17'
 
 start = time.time()
 bpe = fastBPE.fastBPE(codes_path, vocab_path)

@@ -109,7 +109,7 @@ def get_unsuper_rewards(lm, tokenizer,
             delta_fluency = curr_fluency - prev_fluency
 
             if inc_adequacy:
-                curr_adequacy = calculate_adequacy(xlm, bpe, dico, params, cos_sim, src_sent, hyp_sent)
+                curr_adequacy = calculate_adequacy(xlm, bpe, dico, params, cos_sim, src_sent, hyp_sent, device)
                 delta_adequacy = curr_adequacy - prev_adequacy
 
                 curr_reward = delta_fluency + mu * delta_adequacy
@@ -129,7 +129,7 @@ def calculate_fluency(lm, hyp_ids_tensor):
         fluency = 1/np.exp(loss.item())
     return fluency
 
-def calculate_adequacy(xlm, bpe, dico, params, cos_sim, src_sent, hyp_sent):
+def calculate_adequacy(xlm, bpe, dico, params, cos_sim, src_sent, hyp_sent, device):
 
     src_hyp_pair = [src_sent, hyp_sent]
     sentences = bpe.apply(src_hyp_pair)
@@ -140,12 +140,12 @@ def calculate_adequacy(xlm, bpe, dico, params, cos_sim, src_sent, hyp_sent):
     bs = len(sentences)
     slen = max([len(sent) for sent in sentences])
 
-    word_ids = torch.LongTensor(slen, bs).fill_(params.pad_index)
+    word_ids = torch.LongTensor(slen, bs).fill_(params.pad_index).to(device)
     for i in range(len(sentences)):
         sent = torch.LongTensor([dico.index(w) for w in sentences[i]])
         word_ids[:len(sent), i] = sent
 
-    lengths = torch.LongTensor([len(sent) for sent in sentences])
+    lengths = torch.LongTensor([len(sent) for sent in sentences]).to(device)
 
     langs = None
 

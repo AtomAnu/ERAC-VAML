@@ -46,7 +46,7 @@ def calculate_fluency(sentence):
     tensor_input = torch.tensor([tokenizer.convert_tokens_to_ids(tokenize_input)]).to(device)
     loss=model(tensor_input, lm_labels=tensor_input)
 
-    return math.exp(loss)
+    return 1/math.exp(loss)
 
 
 # sample_inputs = ["I'm happy",
@@ -93,7 +93,7 @@ def calculate_fluency(tensor_input):
 
     loss=model(tensor_input, lm_labels=tensor_input)
 
-    return math.exp(loss)
+    return 1/math.exp(loss)
 
 start = time.time()
 
