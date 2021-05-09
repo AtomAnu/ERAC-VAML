@@ -458,9 +458,9 @@ te_iter = data.BucketParallelIterator(test['src'], test['tgt'], args.test_bs, sr
 logging('='*89)
 
 if args.test_only:
-    src_fname = 'src.txt'
-    ref_fname = 'ref.txt'
-    hyp_fname = 'hyp_20210508-045146.txt'
+    src_fname = args.work_dir + 'src.txt'
+    ref_fname = args.work_dir + 'ref.txt'
+    hyp_fname = args.work_dir + 'hyp.txt'
     test = save_eval_results(te_iter, src_fname, ref_fname, hyp_fname)
 else:
     curr_ppl = evaluate(te_iter)
