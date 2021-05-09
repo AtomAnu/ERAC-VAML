@@ -384,11 +384,9 @@ def save_eval_results(iterator, src_fname, ref_fname, hyp_fname):
             # pytorch_bleu requires size [bsz x nref|nhyp x seqlen]
             ref, hyp = utils.prepare_for_bleu(tgt, hyps, eos_idx=eos_idx, pad_idx=tgt_pad_idx, unk_idx=tgt_unk_idx, exclude_unk=True)
             bleu_metric.add_to_corpus(hyp, ref)
-            print(tgt)
-            print(tgt_unk_idx)
-            print(tgt_pad_idx)
-            print(eos_idx)
-            for src_idx, ref_idx, hyp_idx in zip(src.permute(1, 0), ref, hyp):
+            print(tgt.shape)
+
+            for src_idx, ref_idx, hyp_idx in zip(src.permute(1, 0), tgt.permute(1, 0), hyp):
                 # print(ref_idx)
                 src_sent = vocab['src'].convert_to_sent(src_idx.contiguous().data.cpu().view(-1), exclude=[src_pad_idx])
                 ref_sent = vocab['tgt'].convert_to_sent(ref_idx.contiguous().data.cpu().view(-1), exclude=[tgt_pad_idx, eos_idx])
