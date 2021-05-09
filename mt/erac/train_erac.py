@@ -362,6 +362,46 @@ def evaluate(iterator):
 
     return ppl, bleu
 
+def save_eval_results(iterator, src_file='', ref_file='', hyp_file=''):
+    actor.eval()
+    sum_nll, cnt_nll = 0, 0
+    for batch, (src, tgt) in enumerate(iterator, start=1):
+        print(src.shape)
+        # get hyp
+        hyps, _ = actor.generate(src, k=args.beamsize, n=1)
+
+        # get log_prob
+        log_prob = actor(src, tgt)
+
+        # compute masked nll
+        tgt_flat = tgt[1:].view(-1, 1)
+        masked_nll = -log_prob.view(-1, ntoken_tgt).gather(1, tgt_flat.to(torch.int64)).masked_select(tgt_flat.ne(tgt_pad_idx))
+
+        # accumulate nll
+        sum_nll += masked_nll.data.sum()
+        cnt_nll += masked_nll.size(0)
+
+        # pytorch_bleu requires size [bsz x nref|nhyp x seqlen]
+        ref, hyp = utils.prepare_for_bleu(tgt, hyps, eos_idx=eos_idx, pad_idx=tgt_pad_idx, unk_idx=tgt_unk_idx, exclude_unk=True)
+        print(ref.shape)
+        print(hyp.shape)
+        bleu_metric.add_to_corpus(hyp, ref)
+
+    # sanity check
+    vis_idx = np.random.randint(0, tgt.size(1))
+    logging('===> [SRC]  {}'.format(vocab['src'].convert_to_sent(src[:,vis_idx].contiguous().data.cpu().view(-1), exclude=[src_pad_idx])))
+    logging('===> [REF]  {}'.format(vocab['tgt'].convert_to_sent(tgt[1:,vis_idx].contiguous().data.cpu().view(-1), exclude=[tgt_pad_idx, eos_idx])))
+    logging('===> [HYP]  {}'.format(vocab['tgt'].convert_to_sent(hyps[1:,vis_idx,0].contiguous().data.cpu().view(-1), exclude=[tgt_pad_idx, eos_idx])))
+
+    ppl = np.exp(sum_nll.cpu() / cnt_nll)
+
+    bleu4, precs, hyplen, reflen = bleu_metric.corpus_bleu()
+    bleu = bleu4[0] * 100
+    logging('PPL {:.3f} | BLEU = {:.3f}, {:.1f}/{:.1f}/{:.1f}/{:.1f}, hyp_len={}, ref_len={}'.format(
+        ppl, bleu, *[prec[0]*100 for prec in precs], int(hyplen[0]), int(reflen[0])))
+
+    return ppl, bleu
+
 if not args.test_only:
     try:
         best_ppl, best_bleu = float('inf'), 0.
@@ -408,4 +448,5 @@ te_iter = data.BucketParallelIterator(test['src'], test['tgt'], args.test_bs, sr
                                       shuffle=False, cuda=args.cuda, volatile=True)
 
 logging('='*89)
-curr_ppl = evaluate(te_iter)
+# curr_ppl = evaluate(te_iter)
+test = save_eval_results(te_iter)
