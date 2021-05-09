@@ -1,0 +1,116 @@
+==> Vocabulary
+    - vocab size: src=32038, tgt=22811
+    - special symbols [src]: <pad>=0, <unk>=1
+    - special symbols [tgt]: <pad>=0, <unk>=1, <bos>=2, <eos>=3
+==> Load pretrained critic
+    - number of params: 18726172
+    - model path: PATH_TO_CRITIC_FOLDER/20210430-185527/model_best.pt
+    - decoder tau: 0.045
+==> Load pretrained actor
+    - number of params: 20956443
+    - model path: PATH_TO_ACTOR_FOLDER/20210507-171129/model_best.pt
+    - decoder tau: 1.0
+==> Args
+    - save_data : ../data/iwslt14
+    - work_dir : ERAC/20210508-045146
+    - actor_path : PATH_TO_ACTOR_FOLDER/20210507-171129/model_best.pt
+    - critic_path : PATH_TO_CRITIC_FOLDER/20210430-185527/model_best.pt
+    - seed : 1234
+    - cuda : True
+    - epochs : 30
+    - train_bs : 35
+    - valid_bs : 35
+    - test_bs : 35
+    - optim : adam
+    - act_lr : 0.0001
+    - act_beta1 : 0.0
+    - crt_lr : 0.0001
+    - crt_beta1 : 0.0
+    - lr_decay : 0.9
+    - num_decay : 6
+    - grad_clip : 5.0
+    - smooth_coeff : 0.001
+    - mle_coeff : 0.1
+    - no_tgtnet : False
+    - tgt_speed : 0.001
+    - nsample : 1
+    - tau : 0.045
+    - log_interval : 200
+    - debug : False
+    - test_only : False
+    - beamsize : 5
+    - ppl_anneal : False
+    - use_unsuper_reward : True
+    - include_adequacy : False
+    - mu : 1.0
+    - use_tgtnet : True
+===> [SRC]  nein , ich möchte mein leben in aller fülle leben .
+===> [REF]  no , i just want to live life to its full .
+===> [HYP]  no , i want to live my life in all of a lot .
+PPL 10.596 | BLEU = 28.190, 64.4/37.2/23.3/14.9, hyp_len=120592, ref_len=128959
+=========================================================================================
+| epoch   0 |  200/4382 batches | lr 0.000100 0.000100 | ms/batch 9508.6 | ppl  4.19 | td error 0.0662 | reward 0.0005 | sent bleu 28.718 
+| epoch   0 |  400/4382 batches | lr 0.000100 0.000100 | ms/batch 9487.7 | ppl  4.24 | td error 0.0652 | reward 0.0005 | sent bleu 28.467 
+| epoch   0 |  600/4382 batches | lr 0.000100 0.000100 | ms/batch 9419.7 | ppl  4.28 | td error 0.0653 | reward 0.0005 | sent bleu 28.491 
+| epoch   0 |  800/4382 batches | lr 0.000100 0.000100 | ms/batch 9389.1 | ppl  4.32 | td error 0.0648 | reward 0.0005 | sent bleu 28.610 
+| epoch   0 | 1000/4382 batches | lr 0.000100 0.000100 | ms/batch 9390.7 | ppl  4.24 | td error 0.0642 | reward 0.0005 | sent bleu 28.366 
+| epoch   0 | 1200/4382 batches | lr 0.000100 0.000100 | ms/batch 9546.3 | ppl  4.33 | td error 0.0644 | reward 0.0005 | sent bleu 28.138 
+| epoch   0 | 1400/4382 batches | lr 0.000100 0.000100 | ms/batch 9401.8 | ppl  4.36 | td error 0.0646 | reward 0.0005 | sent bleu 28.059 
+| epoch   0 | 1600/4382 batches | lr 0.000100 0.000100 | ms/batch 9574.3 | ppl  4.33 | td error 0.0646 | reward 0.0005 | sent bleu 28.527 
+| epoch   0 | 1800/4382 batches | lr 0.000100 0.000100 | ms/batch 9463.3 | ppl  4.28 | td error 0.0643 | reward 0.0005 | sent bleu 28.891 
+| epoch   0 | 2000/4382 batches | lr 0.000100 0.000100 | ms/batch 9475.7 | ppl  4.38 | td error 0.0645 | reward 0.0005 | sent bleu 28.309 
+| epoch   0 | 2200/4382 batches | lr 0.000100 0.000100 | ms/batch 9357.3 | ppl  4.38 | td error 0.0646 | reward 0.0005 | sent bleu 28.118 
+| epoch   0 | 2400/4382 batches | lr 0.000100 0.000100 | ms/batch 9470.6 | ppl  4.44 | td error 0.0639 | reward 0.0005 | sent bleu 28.159 
+| epoch   0 | 2600/4382 batches | lr 0.000100 0.000100 | ms/batch 9503.9 | ppl  4.34 | td error 0.0640 | reward 0.0005 | sent bleu 27.930 
+| epoch   0 | 2800/4382 batches | lr 0.000100 0.000100 | ms/batch 10048.0 | ppl  4.38 | td error 0.0639 | reward 0.0005 | sent bleu 27.892 
+| epoch   0 | 3000/4382 batches | lr 0.000100 0.000100 | ms/batch 9635.1 | ppl  4.47 | td error 0.0639 | reward 0.0005 | sent bleu 27.183 
+| epoch   0 | 3200/4382 batches | lr 0.000100 0.000100 | ms/batch 9455.5 | ppl  4.42 | td error 0.0640 | reward 0.0005 | sent bleu 27.463 
+| epoch   0 | 3400/4382 batches | lr 0.000100 0.000100 | ms/batch 9571.4 | ppl  4.42 | td error 0.0637 | reward 0.0005 | sent bleu 27.957 
+| epoch   0 | 3600/4382 batches | lr 0.000100 0.000100 | ms/batch 9555.9 | ppl  4.48 | td error 0.0640 | reward 0.0005 | sent bleu 27.647 
+| epoch   0 | 3800/4382 batches | lr 0.000100 0.000100 | ms/batch 9645.5 | ppl  4.39 | td error 0.0637 | reward 0.0005 | sent bleu 28.043 
+| epoch   0 | 4000/4382 batches | lr 0.000100 0.000100 | ms/batch 9396.2 | ppl  4.43 | td error 0.0640 | reward 0.0005 | sent bleu 27.776 
+| epoch   0 | 4200/4382 batches | lr 0.000100 0.000100 | ms/batch 9385.6 | ppl  4.38 | td error 0.0637 | reward 0.0005 | sent bleu 28.277 
+=========================================================================================
+===> [SRC]  ok , das war jetzt nicht schwer .
+===> [REF]  ok , this isn &apos;t exactly <unk> . ok .
+===> [HYP]  ok , that &apos;s not hard now .
+PPL 10.566 | BLEU = 28.326, 64.4/37.2/23.4/15.1, hyp_len=120786, ref_len=128959
+Save model with PPL 10.566 BLEU 28.326
+=========================================================================================
+| epoch   1 |  200/4382 batches | lr 0.000100 0.000100 | ms/batch 9573.3 | ppl  4.20 | td error 0.0639 | reward 0.0005 | sent bleu 28.207 
+| epoch   1 |  400/4382 batches | lr 0.000100 0.000100 | ms/batch 9547.9 | ppl  4.04 | td error 0.0636 | reward 0.0005 | sent bleu 28.842 
+| epoch   1 |  600/4382 batches | lr 0.000100 0.000100 | ms/batch 9264.0 | ppl  4.08 | td error 0.0632 | reward 0.0005 | sent bleu 28.917 
+| epoch   1 |  800/4382 batches | lr 0.000100 0.000100 | ms/batch 9600.1 | ppl  4.13 | td error 0.0632 | reward 0.0005 | sent bleu 28.410 
+| epoch   1 | 1000/4382 batches | lr 0.000100 0.000100 | ms/batch 9479.6 | ppl  4.22 | td error 0.0636 | reward 0.0005 | sent bleu 27.826 
+| epoch   1 | 1200/4382 batches | lr 0.000100 0.000100 | ms/batch 9737.7 | ppl  4.23 | td error 0.0637 | reward 0.0005 | sent bleu 28.244 
+| epoch   1 | 1400/4382 batches | lr 0.000100 0.000100 | ms/batch 9394.7 | ppl  4.19 | td error 0.0636 | reward 0.0005 | sent bleu 28.027 
+| epoch   1 | 1600/4382 batches | lr 0.000100 0.000100 | ms/batch 9462.8 | ppl  4.20 | td error 0.0634 | reward 0.0005 | sent bleu 28.250 
+| epoch   1 | 1800/4382 batches | lr 0.000100 0.000100 | ms/batch 9398.6 | ppl  4.21 | td error 0.0630 | reward 0.0005 | sent bleu 28.323 
+| epoch   1 | 2000/4382 batches | lr 0.000100 0.000100 | ms/batch 9464.9 | ppl  4.23 | td error 0.0633 | reward 0.0005 | sent bleu 28.201 
+| epoch   1 | 2200/4382 batches | lr 0.000100 0.000100 | ms/batch 9343.6 | ppl  4.14 | td error 0.0627 | reward 0.0005 | sent bleu 28.489 
+| epoch   1 | 2400/4382 batches | lr 0.000100 0.000100 | ms/batch 9517.8 | ppl  4.29 | td error 0.0630 | reward 0.0005 | sent bleu 28.110 
+| epoch   1 | 2600/4382 batches | lr 0.000100 0.000100 | ms/batch 9654.7 | ppl  4.18 | td error 0.0630 | reward 0.0005 | sent bleu 28.443 
+| epoch   1 | 2800/4382 batches | lr 0.000100 0.000100 | ms/batch 9491.1 | ppl  4.23 | td error 0.0635 | reward 0.0005 | sent bleu 28.259 
+| epoch   1 | 3000/4382 batches | lr 0.000100 0.000100 | ms/batch 9464.3 | ppl  4.22 | td error 0.0631 | reward 0.0005 | sent bleu 28.359 
+| epoch   1 | 3200/4382 batches | lr 0.000100 0.000100 | ms/batch 9669.2 | ppl  4.22 | td error 0.0630 | reward 0.0005 | sent bleu 28.113 
+| epoch   1 | 3400/4382 batches | lr 0.000100 0.000100 | ms/batch 9693.8 | ppl  4.22 | td error 0.0630 | reward 0.0005 | sent bleu 28.459 
+| epoch   1 | 3600/4382 batches | lr 0.000100 0.000100 | ms/batch 9706.0 | ppl  4.30 | td error 0.0631 | reward 0.0005 | sent bleu 28.265 
+| epoch   1 | 3800/4382 batches | lr 0.000100 0.000100 | ms/batch 9483.7 | ppl  4.34 | td error 0.0631 | reward 0.0005 | sent bleu 27.932 
+| epoch   1 | 4000/4382 batches | lr 0.000100 0.000100 | ms/batch 9474.4 | ppl  4.27 | td error 0.0631 | reward 0.0005 | sent bleu 28.123 
+| epoch   1 | 4200/4382 batches | lr 0.000100 0.000100 | ms/batch 9415.9 | ppl  4.26 | td error 0.0631 | reward 0.0005 | sent bleu 27.859 
+=========================================================================================
+===> [SRC]  ich meine , hier sind viele <unk> leute , die kinder haben , und wir haben dieses dilemma , wie wir sie erziehen sollen .
+===> [REF]  i mean , there &apos;s a lot of people in the room who are wealthy , and they &apos;ve got kids , and we &apos;ve got this dilemma about how you bring them up .
+===> [HYP]  i mean , here are a lot of <unk> people who have children , and we have this dilemma how we &apos;re going to educate them .
+PPL 10.625 | BLEU = 28.196, 64.4/37.1/23.3/15.0, hyp_len=120638, ref_len=128959
+Curr: 10.625 28.196, Best: 10.566 28.326. Anneal the learning rate 0.000100 --> 0.000090
+=========================================================================================
+| epoch   2 |  200/4382 batches | lr 0.000090 0.000100 | ms/batch 9512.8 | ppl  4.02 | td error 0.0625 | reward 0.0005 | sent bleu 28.460 
+| epoch   2 |  400/4382 batches | lr 0.000090 0.000100 | ms/batch 9476.0 | ppl  4.04 | td error 0.0630 | reward 0.0005 | sent bleu 28.364 
+| epoch   2 |  600/4382 batches | lr 0.000090 0.000100 | ms/batch 9833.9 | ppl  4.02 | td error 0.0631 | reward 0.0005 | sent bleu 28.482 
+| epoch   2 |  800/4382 batches | lr 0.000090 0.000100 | ms/batch 9407.0 | ppl  4.03 | td error 0.0631 | reward 0.0005 | sent bleu 28.473 
+| epoch   2 | 1000/4382 batches | lr 0.000090 0.000100 | ms/batch 9679.4 | ppl  3.99 | td error 0.0627 | reward 0.0005 | sent bleu 28.970 
+| epoch   2 | 1200/4382 batches | lr 0.000090 0.000100 | ms/batch 9664.9 | ppl  4.02 | td error 0.0632 | reward 0.0005 | sent bleu 28.917 
+| epoch   2 | 1400/4382 batches | lr 0.000090 0.000100 | ms/batch 9448.8 | ppl  4.02 | td error 0.0631 | reward 0.0005 | sent bleu 28.844 
+| epoch   2 | 1600/4382 batches | lr 0.000090 0.000100 | ms/batch 9572.0 | ppl  4.00 | td error 0.0629 | reward 0.0005 | sent bleu 28.407 
+| epoch   2 | 1800/4382 batches | lr 0.000090 0.000100 | ms/batch 9528.5 | ppl  4.12 | td error 0.0628 | reward 0.0005 | sent bleu 28.503 
