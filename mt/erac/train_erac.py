@@ -362,6 +362,54 @@ def evaluate(iterator):
 
     return ppl, bleu
 
+def save_eval_results(iterator, src_fname, ref_fname, hyp_fname):
+    actor.eval()
+    sum_nll, cnt_nll = 0, 0
+    with open(src_fname, 'w') as src_file, open(ref_fname, 'w') as ref_file, open(hyp_fname, 'w') as hyp_file:
+        for batch, (src, tgt) in enumerate(iterator, start=1):
+            # get hyp
+            hyps, _ = actor.generate(src, k=args.beamsize, n=1)
+
+            # get log_prob
+            log_prob = actor(src, tgt)
+
+            # compute masked nll
+            tgt_flat = tgt[1:].view(-1, 1)
+            masked_nll = -log_prob.view(-1, ntoken_tgt).gather(1, tgt_flat.to(torch.int64)).masked_select(tgt_flat.ne(tgt_pad_idx))
+
+            # accumulate nll
+            sum_nll += masked_nll.data.sum()
+            cnt_nll += masked_nll.size(0)
+
+            # pytorch_bleu requires size [bsz x nref|nhyp x seqlen]
+            ref, hyp = utils.prepare_for_bleu(tgt, hyps, eos_idx=eos_idx, pad_idx=tgt_pad_idx, unk_idx=tgt_unk_idx, exclude_unk=True)
+            bleu_metric.add_to_corpus(hyp, ref)
+            print(tgt.shape)
+
+            for src_idx, ref_idx, hyp_idx in zip(src.permute(1, 0), tgt.permute(1, 0), hyp):
+                # print(ref_idx)
+                src_sent = vocab['src'].convert_to_sent(src_idx.contiguous().data.cpu().view(-1), exclude=[src_pad_idx])
+                ref_sent = vocab['tgt'].convert_to_sent(ref_idx.contiguous().data.cpu().view(-1), exclude=[tgt_pad_idx, eos_idx])
+                hyp_sent = vocab['tgt'].convert_to_sent(hyp_idx.contiguous().data.cpu().view(-1), exclude=[tgt_pad_idx, eos_idx])
+                src_file.write(src_sent + '\n')
+                ref_file.write(ref_sent + '\n')
+                hyp_file.write(hyp_sent + '\n')
+
+    # sanity check
+    vis_idx = np.random.randint(0, tgt.size(1))
+    logging('===> [SRC]  {}'.format(vocab['src'].convert_to_sent(src[:,vis_idx].contiguous().data.cpu().view(-1), exclude=[src_pad_idx])))
+    logging('===> [REF]  {}'.format(vocab['tgt'].convert_to_sent(tgt[1:,vis_idx].contiguous().data.cpu().view(-1), exclude=[tgt_pad_idx, eos_idx])))
+    logging('===> [HYP]  {}'.format(vocab['tgt'].convert_to_sent(hyps[1:,vis_idx,0].contiguous().data.cpu().view(-1), exclude=[tgt_pad_idx, eos_idx])))
+
+    ppl = np.exp(sum_nll.cpu() / cnt_nll)
+
+    bleu4, precs, hyplen, reflen = bleu_metric.corpus_bleu()
+    bleu = bleu4[0] * 100
+    logging('PPL {:.3f} | BLEU = {:.3f}, {:.1f}/{:.1f}/{:.1f}/{:.1f}, hyp_len={}, ref_len={}'.format(
+        ppl, bleu, *[prec[0]*100 for prec in precs], int(hyplen[0]), int(reflen[0])))
+
+    return ppl, bleu
+
 if not args.test_only:
     try:
         best_ppl, best_bleu = float('inf'), 0.
@@ -408,4 +456,11 @@ te_iter = data.BucketParallelIterator(test['src'], test['tgt'], args.test_bs, sr
                                       shuffle=False, cuda=args.cuda, volatile=True)
 
 logging('='*89)
-curr_ppl = evaluate(te_iter)
+
+if args.test_only:
+    src_fname = 'src.txt'
+    ref_fname = 'ref.txt'
+    hyp_fname = 'hyp_20210508-045146.txt'
+    test = save_eval_results(te_iter, src_fname, ref_fname, hyp_fname)
+else:
+    curr_ppl = evaluate(te_iter)
