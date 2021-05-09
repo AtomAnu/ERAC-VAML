@@ -1,0 +1,490 @@
+==> Args
+    - save_data : ../data/iwslt14
+    - work_dir : PATH_TO_ACTOR_FOLDER/20210502-083049
+    - nemb : 256
+    - nhid : 256
+    - natthid : 256
+    - nlayer : 1
+    - drope : 0.0
+    - droph : 0.3
+    - att_mode : dotprod
+    - input_feed : False
+    - seed : 1234
+    - cuda : True
+    - epochs : 30
+    - train_bs : 30
+    - valid_bs : 30
+    - test_bs : 30
+    - param_init : 0.1
+    - optim : sgd
+    - lr : 0.6
+    - grad_clip : 5.0
+    - start_decay : 0
+    - lr_decay : 0.5
+    - num_decay : 6
+    - log_interval : 200
+    - debug : False
+    - test_only : False
+    - beamsize : 5
+    - ppl_anneal : False
+==> Vocabulary
+    - vocab size: src=32038, tgt=22811
+    - special symbols [src]: <pad>=0, <unk>=1
+    - special symbols [tgt]: <pad>=0, <unk>=1, <bos>=2, <eos>=3
+==> Initalize actor
+    - number of params: 20956443
+=========================================================================================
+| epoch   0 |  200/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  7.16 | ppl  1292.36 
+| epoch   0 |  400/5112 batches | lr 0.600000 | ms/batch  12.2 | loss  5.81 | ppl   333.38 
+| epoch   0 |  600/5112 batches | lr 0.600000 | ms/batch  12.3 | loss  5.41 | ppl   223.59 
+| epoch   0 |  800/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  5.15 | ppl   172.86 
+| epoch   0 | 1000/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  4.97 | ppl   144.34 
+| epoch   0 | 1200/5112 batches | lr 0.600000 | ms/batch  12.3 | loss  4.80 | ppl   121.32 
+| epoch   0 | 1400/5112 batches | lr 0.600000 | ms/batch  12.3 | loss  4.68 | ppl   108.23 
+| epoch   0 | 1600/5112 batches | lr 0.600000 | ms/batch  12.3 | loss  4.52 | ppl    92.09 
+| epoch   0 | 1800/5112 batches | lr 0.600000 | ms/batch  12.3 | loss  4.39 | ppl    80.98 
+| epoch   0 | 2000/5112 batches | lr 0.600000 | ms/batch  12.3 | loss  4.26 | ppl    71.04 
+| epoch   0 | 2200/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  4.16 | ppl    64.10 
+| epoch   0 | 2400/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  4.05 | ppl    57.21 
+| epoch   0 | 2600/5112 batches | lr 0.600000 | ms/batch  12.2 | loss  3.95 | ppl    51.69 
+| epoch   0 | 2800/5112 batches | lr 0.600000 | ms/batch  12.2 | loss  3.91 | ppl    49.92 
+| epoch   0 | 3000/5112 batches | lr 0.600000 | ms/batch  12.3 | loss  3.76 | ppl    42.91 
+| epoch   0 | 3200/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  3.73 | ppl    41.88 
+| epoch   0 | 3400/5112 batches | lr 0.600000 | ms/batch  12.2 | loss  3.64 | ppl    38.03 
+| epoch   0 | 3600/5112 batches | lr 0.600000 | ms/batch  12.2 | loss  3.60 | ppl    36.62 
+| epoch   0 | 3800/5112 batches | lr 0.600000 | ms/batch  12.2 | loss  3.58 | ppl    35.79 
+| epoch   0 | 4000/5112 batches | lr 0.600000 | ms/batch  12.2 | loss  3.52 | ppl    33.65 
+| epoch   0 | 4200/5112 batches | lr 0.600000 | ms/batch  12.1 | loss  3.47 | ppl    32.16 
+| epoch   0 | 4400/5112 batches | lr 0.600000 | ms/batch  12.2 | loss  3.43 | ppl    30.75 
+| epoch   0 | 4600/5112 batches | lr 0.600000 | ms/batch  12.3 | loss  3.41 | ppl    30.16 
+| epoch   0 | 4800/5112 batches | lr 0.600000 | ms/batch  12.2 | loss  3.34 | ppl    28.15 
+| epoch   0 | 5000/5112 batches | lr 0.600000 | ms/batch  12.3 | loss  3.33 | ppl    27.94 
+=========================================================================================
+===> [SRC]  wollte er , dass sie springen , oder sagte er einfach : &quot; ich bin dann mal weg &quot; ?
+===> [REF]  did he tell you to jump , or he just said , &quot; i &apos;m out of here ! &quot; and ...
+===> [HYP]  he wanted to leave you , or he said , &quot; i &apos;m just going to go back , &quot; i &apos;m going to go back ? &quot;
+PPL 24.189 | BLEU = 16.161, 48.3/21.7/11.1/5.9, hyp_len=131001, ref_len=128959
+Save model with PPL 24.189 BLEU 16.161
+=========================================================================================
+| epoch   1 |  200/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  3.19 | ppl    24.23 
+| epoch   1 |  400/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  3.17 | ppl    23.88 
+| epoch   1 |  600/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  3.16 | ppl    23.48 
+| epoch   1 |  800/5112 batches | lr 0.600000 | ms/batch  12.3 | loss  3.11 | ppl    22.37 
+| epoch   1 | 1000/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  3.10 | ppl    22.15 
+| epoch   1 | 1200/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  3.09 | ppl    21.93 
+| epoch   1 | 1400/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  3.09 | ppl    22.08 
+| epoch   1 | 1600/5112 batches | lr 0.600000 | ms/batch  12.3 | loss  3.05 | ppl    21.06 
+| epoch   1 | 1800/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  3.03 | ppl    20.64 
+| epoch   1 | 2000/5112 batches | lr 0.600000 | ms/batch  12.3 | loss  3.02 | ppl    20.59 
+| epoch   1 | 2200/5112 batches | lr 0.600000 | ms/batch  12.3 | loss  3.02 | ppl    20.47 
+| epoch   1 | 2400/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  3.00 | ppl    20.16 
+| epoch   1 | 2600/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  3.00 | ppl    20.05 
+| epoch   1 | 2800/5112 batches | lr 0.600000 | ms/batch  12.3 | loss  2.97 | ppl    19.41 
+| epoch   1 | 3000/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  2.95 | ppl    19.12 
+| epoch   1 | 3200/5112 batches | lr 0.600000 | ms/batch  12.3 | loss  2.94 | ppl    18.97 
+| epoch   1 | 3400/5112 batches | lr 0.600000 | ms/batch  12.3 | loss  2.90 | ppl    18.24 
+| epoch   1 | 3600/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  2.90 | ppl    18.16 
+| epoch   1 | 3800/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  2.90 | ppl    18.22 
+| epoch   1 | 4000/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  2.89 | ppl    17.95 
+| epoch   1 | 4200/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.88 | ppl    17.78 
+| epoch   1 | 4400/5112 batches | lr 0.600000 | ms/batch  12.6 | loss  2.88 | ppl    17.78 
+| epoch   1 | 4600/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  2.86 | ppl    17.51 
+| epoch   1 | 4800/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  2.87 | ppl    17.64 
+| epoch   1 | 5000/5112 batches | lr 0.600000 | ms/batch  12.3 | loss  2.83 | ppl    17.00 
+=========================================================================================
+===> [SRC]  wir haben ein video , das zeigt was sie planen , und virgin <unk> in der luft .
+===> [REF]  i think , with us , we &apos;ve got a video that shows what you &apos;re up to , and virgin galactic up in the air .
+===> [HYP]  we have a video that shows what they plan , and <unk> <unk> in the air .
+PPL 15.229 | BLEU = 21.320, 61.4/32.1/18.6/11.0, hyp_len=110548, ref_len=128959
+Save model with PPL 15.229 BLEU 21.320
+=========================================================================================
+| epoch   2 |  200/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  2.66 | ppl    14.37 
+| epoch   2 |  400/5112 batches | lr 0.600000 | ms/batch  12.3 | loss  2.64 | ppl    14.04 
+| epoch   2 |  600/5112 batches | lr 0.600000 | ms/batch  12.3 | loss  2.65 | ppl    14.11 
+| epoch   2 |  800/5112 batches | lr 0.600000 | ms/batch  12.3 | loss  2.66 | ppl    14.23 
+| epoch   2 | 1000/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.66 | ppl    14.31 
+| epoch   2 | 1200/5112 batches | lr 0.600000 | ms/batch  12.9 | loss  2.65 | ppl    14.10 
+| epoch   2 | 1400/5112 batches | lr 0.600000 | ms/batch  12.6 | loss  2.62 | ppl    13.78 
+| epoch   2 | 1600/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.61 | ppl    13.64 
+| epoch   2 | 1800/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.64 | ppl    14.04 
+| epoch   2 | 2000/5112 batches | lr 0.600000 | ms/batch  12.6 | loss  2.68 | ppl    14.55 
+| epoch   2 | 2200/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.63 | ppl    13.94 
+| epoch   2 | 2400/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.64 | ppl    14.06 
+| epoch   2 | 2600/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.62 | ppl    13.76 
+| epoch   2 | 2800/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  2.62 | ppl    13.68 
+| epoch   2 | 3000/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  2.63 | ppl    13.86 
+| epoch   2 | 3200/5112 batches | lr 0.600000 | ms/batch  12.6 | loss  2.63 | ppl    13.82 
+| epoch   2 | 3400/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.63 | ppl    13.91 
+| epoch   2 | 3600/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.61 | ppl    13.60 
+| epoch   2 | 3800/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.64 | ppl    14.00 
+| epoch   2 | 4000/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.61 | ppl    13.57 
+| epoch   2 | 4200/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.62 | ppl    13.68 
+| epoch   2 | 4400/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  2.60 | ppl    13.45 
+| epoch   2 | 4600/5112 batches | lr 0.600000 | ms/batch  12.6 | loss  2.61 | ppl    13.57 
+| epoch   2 | 4800/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  2.60 | ppl    13.45 
+| epoch   2 | 5000/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.58 | ppl    13.21 
+=========================================================================================
+===> [SRC]  15 000 menschen füllten unsere formulare aus und sagten , sie würden es probieren .
+===> [REF]  and actually , we &apos;ve had about 15,000 people fill in the forms saying they want to give it a go .
+===> [HYP]  ten thousand people filled our forms and they said it would try to try it .
+PPL 12.926 | BLEU = 24.337, 61.0/33.1/19.6/11.9, hyp_len=120142, ref_len=128959
+Save model with PPL 12.926 BLEU 24.337
+=========================================================================================
+| epoch   3 |  200/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.40 | ppl    10.99 
+| epoch   3 |  400/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.41 | ppl    11.16 
+| epoch   3 |  600/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.39 | ppl    10.96 
+| epoch   3 |  800/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.41 | ppl    11.11 
+| epoch   3 | 1000/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.43 | ppl    11.31 
+| epoch   3 | 1200/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.43 | ppl    11.32 
+| epoch   3 | 1400/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.41 | ppl    11.13 
+| epoch   3 | 1600/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  2.44 | ppl    11.48 
+| epoch   3 | 1800/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  2.42 | ppl    11.27 
+| epoch   3 | 2000/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  2.43 | ppl    11.37 
+| epoch   3 | 2200/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  2.43 | ppl    11.31 
+| epoch   3 | 2400/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  2.42 | ppl    11.19 
+| epoch   3 | 2600/5112 batches | lr 0.600000 | ms/batch  12.6 | loss  2.41 | ppl    11.19 
+| epoch   3 | 2800/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  2.43 | ppl    11.36 
+| epoch   3 | 3000/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  2.42 | ppl    11.29 
+| epoch   3 | 3200/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.45 | ppl    11.63 
+| epoch   3 | 3400/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.41 | ppl    11.18 
+| epoch   3 | 3600/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.40 | ppl    11.06 
+| epoch   3 | 3800/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  2.43 | ppl    11.34 
+| epoch   3 | 4000/5112 batches | lr 0.600000 | ms/batch  12.6 | loss  2.46 | ppl    11.68 
+| epoch   3 | 4200/5112 batches | lr 0.600000 | ms/batch  12.6 | loss  2.45 | ppl    11.57 
+| epoch   3 | 4400/5112 batches | lr 0.600000 | ms/batch  12.4 | loss  2.43 | ppl    11.38 
+| epoch   3 | 4600/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.42 | ppl    11.29 
+| epoch   3 | 4800/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.43 | ppl    11.39 
+| epoch   3 | 5000/5112 batches | lr 0.600000 | ms/batch  12.5 | loss  2.45 | ppl    11.55 
+=========================================================================================
+===> [SRC]  rb : nein
+===> [REF]  rb : no .
+===> [HYP]  rb : no .
+PPL 11.979 | BLEU = 24.024, 59.7/32.3/19.1/11.6, hyp_len=121527, ref_len=128959
+Curr: 11.979 24.024, Best: 12.926 24.337. Anneal the learning rate 0.600000 --> 0.300000
+=========================================================================================
+| epoch   4 |  200/5112 batches | lr 0.300000 | ms/batch  12.5 | loss  2.14 | ppl     8.52 
+| epoch   4 |  400/5112 batches | lr 0.300000 | ms/batch  12.5 | loss  2.11 | ppl     8.22 
+| epoch   4 |  600/5112 batches | lr 0.300000 | ms/batch  12.5 | loss  2.13 | ppl     8.45 
+| epoch   4 |  800/5112 batches | lr 0.300000 | ms/batch  12.5 | loss  2.09 | ppl     8.07 
+| epoch   4 | 1000/5112 batches | lr 0.300000 | ms/batch  12.5 | loss  2.11 | ppl     8.25 
+| epoch   4 | 1200/5112 batches | lr 0.300000 | ms/batch  12.5 | loss  2.11 | ppl     8.23 
+| epoch   4 | 1400/5112 batches | lr 0.300000 | ms/batch  12.6 | loss  2.10 | ppl     8.16 
+| epoch   4 | 1600/5112 batches | lr 0.300000 | ms/batch  12.4 | loss  2.08 | ppl     8.03 
+| epoch   4 | 1800/5112 batches | lr 0.300000 | ms/batch  12.4 | loss  2.10 | ppl     8.15 
+| epoch   4 | 2000/5112 batches | lr 0.300000 | ms/batch  12.4 | loss  2.11 | ppl     8.24 
+| epoch   4 | 2200/5112 batches | lr 0.300000 | ms/batch  12.5 | loss  2.09 | ppl     8.08 
+| epoch   4 | 2400/5112 batches | lr 0.300000 | ms/batch  12.4 | loss  2.11 | ppl     8.24 
+| epoch   4 | 2600/5112 batches | lr 0.300000 | ms/batch  12.5 | loss  2.12 | ppl     8.30 
+| epoch   4 | 2800/5112 batches | lr 0.300000 | ms/batch  12.4 | loss  2.12 | ppl     8.32 
+| epoch   4 | 3000/5112 batches | lr 0.300000 | ms/batch  13.9 | loss  2.12 | ppl     8.34 
+| epoch   4 | 3200/5112 batches | lr 0.300000 | ms/batch  12.5 | loss  2.11 | ppl     8.21 
+| epoch   4 | 3400/5112 batches | lr 0.300000 | ms/batch  12.5 | loss  2.10 | ppl     8.18 
+| epoch   4 | 3600/5112 batches | lr 0.300000 | ms/batch  12.5 | loss  2.11 | ppl     8.27 
+| epoch   4 | 3800/5112 batches | lr 0.300000 | ms/batch  12.5 | loss  2.11 | ppl     8.21 
+| epoch   4 | 4000/5112 batches | lr 0.300000 | ms/batch  12.7 | loss  2.13 | ppl     8.40 
+| epoch   4 | 4200/5112 batches | lr 0.300000 | ms/batch  12.5 | loss  2.13 | ppl     8.46 
+| epoch   4 | 4400/5112 batches | lr 0.300000 | ms/batch  12.6 | loss  2.12 | ppl     8.35 
+| epoch   4 | 4600/5112 batches | lr 0.300000 | ms/batch  12.4 | loss  2.10 | ppl     8.16 
+| epoch   4 | 4800/5112 batches | lr 0.300000 | ms/batch  12.5 | loss  2.11 | ppl     8.29 
+| epoch   4 | 5000/5112 batches | lr 0.300000 | ms/batch  12.5 | loss  2.11 | ppl     8.22 
+=========================================================================================
+===> [SRC]  ich nehme an , sie werden mich nicht von der bühnen werfen , da sie ja die frage stellten .
+===> [REF]  so i suppose you &apos;re not going to be able to kick me off the stage , since you asked the question .
+===> [HYP]  i suppose you &apos;re not going to throw me off from the stages , because they asked the question .
+PPL 10.376 | BLEU = 27.378, 62.8/35.6/22.0/13.9, hyp_len=122812, ref_len=128959
+Save model with PPL 10.376 BLEU 27.378
+=========================================================================================
+| epoch   5 |  200/5112 batches | lr 0.300000 | ms/batch  12.4 | loss  1.96 | ppl     7.12 
+| epoch   5 |  400/5112 batches | lr 0.300000 | ms/batch  12.5 | loss  1.98 | ppl     7.27 
+| epoch   5 |  600/5112 batches | lr 0.300000 | ms/batch  12.4 | loss  1.96 | ppl     7.10 
+| epoch   5 |  800/5112 batches | lr 0.300000 | ms/batch  12.6 | loss  1.98 | ppl     7.22 
+| epoch   5 | 1000/5112 batches | lr 0.300000 | ms/batch  12.4 | loss  1.98 | ppl     7.28 
+| epoch   5 | 1200/5112 batches | lr 0.300000 | ms/batch  12.5 | loss  2.00 | ppl     7.41 
+| epoch   5 | 1400/5112 batches | lr 0.300000 | ms/batch  12.4 | loss  1.98 | ppl     7.27 
+| epoch   5 | 1600/5112 batches | lr 0.300000 | ms/batch  12.5 | loss  1.98 | ppl     7.21 
+| epoch   5 | 1800/5112 batches | lr 0.300000 | ms/batch  12.4 | loss  1.99 | ppl     7.34 
+| epoch   5 | 2000/5112 batches | lr 0.300000 | ms/batch  12.5 | loss  2.01 | ppl     7.45 
+| epoch   5 | 2200/5112 batches | lr 0.300000 | ms/batch  12.3 | loss  2.02 | ppl     7.53 
+| epoch   5 | 2400/5112 batches | lr 0.300000 | ms/batch  12.3 | loss  1.98 | ppl     7.25 
+| epoch   5 | 2600/5112 batches | lr 0.300000 | ms/batch  12.3 | loss  2.00 | ppl     7.38 
+| epoch   5 | 2800/5112 batches | lr 0.300000 | ms/batch  12.3 | loss  2.01 | ppl     7.44 
+| epoch   5 | 3000/5112 batches | lr 0.300000 | ms/batch  12.3 | loss  2.03 | ppl     7.65 
+| epoch   5 | 3200/5112 batches | lr 0.300000 | ms/batch  12.4 | loss  2.03 | ppl     7.60 
+| epoch   5 | 3400/5112 batches | lr 0.300000 | ms/batch  12.2 | loss  2.01 | ppl     7.47 
+| epoch   5 | 3600/5112 batches | lr 0.300000 | ms/batch  12.3 | loss  2.02 | ppl     7.52 
+| epoch   5 | 3800/5112 batches | lr 0.300000 | ms/batch  12.3 | loss  2.02 | ppl     7.55 
+| epoch   5 | 4000/5112 batches | lr 0.300000 | ms/batch  12.3 | loss  2.01 | ppl     7.45 
+| epoch   5 | 4200/5112 batches | lr 0.300000 | ms/batch  12.3 | loss  2.02 | ppl     7.53 
+| epoch   5 | 4400/5112 batches | lr 0.300000 | ms/batch  12.3 | loss  2.02 | ppl     7.56 
+| epoch   5 | 4600/5112 batches | lr 0.300000 | ms/batch  12.3 | loss  2.02 | ppl     7.54 
+| epoch   5 | 4800/5112 batches | lr 0.300000 | ms/batch  12.4 | loss  2.04 | ppl     7.66 
+| epoch   5 | 5000/5112 batches | lr 0.300000 | ms/batch  12.3 | loss  2.02 | ppl     7.56 
+=========================================================================================
+===> [SRC]  rb : nein
+===> [REF]  rb : no .
+===> [HYP]  rb : no .
+PPL 10.301 | BLEU = 27.294, 63.9/36.5/22.7/14.5, hyp_len=119327, ref_len=128959
+Curr: 10.301 27.294, Best: 10.376 27.378. Anneal the learning rate 0.300000 --> 0.150000
+=========================================================================================
+| epoch   6 |  200/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.83 | ppl     6.26 
+| epoch   6 |  400/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.83 | ppl     6.21 
+| epoch   6 |  600/5112 batches | lr 0.150000 | ms/batch  12.4 | loss  1.85 | ppl     6.38 
+| epoch   6 |  800/5112 batches | lr 0.150000 | ms/batch  12.2 | loss  1.82 | ppl     6.14 
+| epoch   6 | 1000/5112 batches | lr 0.150000 | ms/batch  12.4 | loss  1.84 | ppl     6.32 
+| epoch   6 | 1200/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.84 | ppl     6.28 
+| epoch   6 | 1400/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.83 | ppl     6.22 
+| epoch   6 | 1600/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.82 | ppl     6.17 
+| epoch   6 | 1800/5112 batches | lr 0.150000 | ms/batch  12.4 | loss  1.85 | ppl     6.34 
+| epoch   6 | 2000/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.82 | ppl     6.18 
+| epoch   6 | 2200/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.83 | ppl     6.25 
+| epoch   6 | 2400/5112 batches | lr 0.150000 | ms/batch  12.4 | loss  1.84 | ppl     6.32 
+| epoch   6 | 2600/5112 batches | lr 0.150000 | ms/batch  12.5 | loss  1.85 | ppl     6.39 
+| epoch   6 | 2800/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.83 | ppl     6.23 
+| epoch   6 | 3000/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.83 | ppl     6.26 
+| epoch   6 | 3200/5112 batches | lr 0.150000 | ms/batch  12.4 | loss  1.86 | ppl     6.45 
+| epoch   6 | 3400/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.85 | ppl     6.34 
+| epoch   6 | 3600/5112 batches | lr 0.150000 | ms/batch  12.4 | loss  1.83 | ppl     6.26 
+| epoch   6 | 3800/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.85 | ppl     6.37 
+| epoch   6 | 4000/5112 batches | lr 0.150000 | ms/batch  12.4 | loss  1.83 | ppl     6.25 
+| epoch   6 | 4200/5112 batches | lr 0.150000 | ms/batch  12.4 | loss  1.85 | ppl     6.35 
+| epoch   6 | 4400/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.84 | ppl     6.32 
+| epoch   6 | 4600/5112 batches | lr 0.150000 | ms/batch  12.4 | loss  1.86 | ppl     6.44 
+| epoch   6 | 4800/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.86 | ppl     6.42 
+| epoch   6 | 5000/5112 batches | lr 0.150000 | ms/batch  12.4 | loss  1.85 | ppl     6.39 
+=========================================================================================
+===> [SRC]  ich meine , hier sind viele <unk> leute , die kinder haben , und wir haben dieses dilemma , wie wir sie erziehen sollen .
+===> [REF]  i mean , there &apos;s a lot of people in the room who are wealthy , and they &apos;ve got kids , and we &apos;ve got this dilemma about how you bring them up .
+===> [HYP]  i mean , there are many <unk> people who have children , and we have this dilemma , as we should educate them .
+PPL 9.914 | BLEU = 28.082, 64.3/37.2/23.3/14.9, hyp_len=120271, ref_len=128959
+Save model with PPL 9.914 BLEU 28.082
+=========================================================================================
+| epoch   7 |  200/5112 batches | lr 0.150000 | ms/batch  12.5 | loss  1.75 | ppl     5.73 
+| epoch   7 |  400/5112 batches | lr 0.150000 | ms/batch  12.4 | loss  1.77 | ppl     5.85 
+| epoch   7 |  600/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.75 | ppl     5.77 
+| epoch   7 |  800/5112 batches | lr 0.150000 | ms/batch  12.4 | loss  1.76 | ppl     5.84 
+| epoch   7 | 1000/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.77 | ppl     5.85 
+| epoch   7 | 1200/5112 batches | lr 0.150000 | ms/batch  12.4 | loss  1.75 | ppl     5.78 
+| epoch   7 | 1400/5112 batches | lr 0.150000 | ms/batch  12.5 | loss  1.77 | ppl     5.87 
+| epoch   7 | 1600/5112 batches | lr 0.150000 | ms/batch  12.5 | loss  1.77 | ppl     5.85 
+| epoch   7 | 1800/5112 batches | lr 0.150000 | ms/batch  12.5 | loss  1.78 | ppl     5.92 
+| epoch   7 | 2000/5112 batches | lr 0.150000 | ms/batch  12.6 | loss  1.79 | ppl     5.99 
+| epoch   7 | 2200/5112 batches | lr 0.150000 | ms/batch  12.6 | loss  1.81 | ppl     6.11 
+| epoch   7 | 2400/5112 batches | lr 0.150000 | ms/batch  12.5 | loss  1.78 | ppl     5.91 
+| epoch   7 | 2600/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.81 | ppl     6.13 
+| epoch   7 | 2800/5112 batches | lr 0.150000 | ms/batch  12.4 | loss  1.80 | ppl     6.02 
+| epoch   7 | 3000/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.78 | ppl     5.94 
+| epoch   7 | 3200/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.80 | ppl     6.02 
+| epoch   7 | 3400/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.79 | ppl     5.98 
+| epoch   7 | 3600/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.80 | ppl     6.07 
+| epoch   7 | 3800/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.79 | ppl     6.00 
+| epoch   7 | 4000/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.81 | ppl     6.09 
+| epoch   7 | 4200/5112 batches | lr 0.150000 | ms/batch  12.4 | loss  1.81 | ppl     6.09 
+| epoch   7 | 4400/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.80 | ppl     6.03 
+| epoch   7 | 4600/5112 batches | lr 0.150000 | ms/batch  12.4 | loss  1.80 | ppl     6.05 
+| epoch   7 | 4800/5112 batches | lr 0.150000 | ms/batch  13.8 | loss  1.81 | ppl     6.10 
+| epoch   7 | 5000/5112 batches | lr 0.150000 | ms/batch  12.3 | loss  1.80 | ppl     6.05 
+=========================================================================================
+===> [SRC]  rb : unser <unk> argumentierte , dass es tatsächlich &quot; vergiss den priester , hier sind die sex <unk> &quot; heißt .
+===> [REF]  rb : so our key witness argued that it was actually &quot; never mind the priest , here &apos;s the sex pistols . &quot;
+===> [HYP]  rb : well , our favorite warning , which is actually &quot; forget the priest , here are the sex <unk> . &quot;
+PPL 9.973 | BLEU = 27.934, 64.5/37.2/23.3/14.9, hyp_len=119621, ref_len=128959
+Curr: 9.973 27.934, Best: 9.914 28.082. Anneal the learning rate 0.150000 --> 0.075000
+=========================================================================================
+| epoch   8 |  200/5112 batches | lr 0.075000 | ms/batch  12.3 | loss  1.69 | ppl     5.42 
+| epoch   8 |  400/5112 batches | lr 0.075000 | ms/batch  12.3 | loss  1.67 | ppl     5.30 
+| epoch   8 |  600/5112 batches | lr 0.075000 | ms/batch  12.3 | loss  1.68 | ppl     5.37 
+| epoch   8 |  800/5112 batches | lr 0.075000 | ms/batch  12.3 | loss  1.68 | ppl     5.37 
+| epoch   8 | 1000/5112 batches | lr 0.075000 | ms/batch  12.5 | loss  1.70 | ppl     5.48 
+| epoch   8 | 1200/5112 batches | lr 0.075000 | ms/batch  12.4 | loss  1.67 | ppl     5.30 
+| epoch   8 | 1400/5112 batches | lr 0.075000 | ms/batch  12.3 | loss  1.69 | ppl     5.43 
+| epoch   8 | 1600/5112 batches | lr 0.075000 | ms/batch  12.4 | loss  1.70 | ppl     5.49 
+| epoch   8 | 1800/5112 batches | lr 0.075000 | ms/batch  12.2 | loss  1.70 | ppl     5.46 
+| epoch   8 | 2000/5112 batches | lr 0.075000 | ms/batch  12.3 | loss  1.69 | ppl     5.43 
+| epoch   8 | 2200/5112 batches | lr 0.075000 | ms/batch  12.3 | loss  1.68 | ppl     5.36 
+| epoch   8 | 2400/5112 batches | lr 0.075000 | ms/batch  12.2 | loss  1.68 | ppl     5.38 
+| epoch   8 | 2600/5112 batches | lr 0.075000 | ms/batch  12.4 | loss  1.71 | ppl     5.55 
+| epoch   8 | 2800/5112 batches | lr 0.075000 | ms/batch  12.3 | loss  1.69 | ppl     5.43 
+| epoch   8 | 3000/5112 batches | lr 0.075000 | ms/batch  12.4 | loss  1.72 | ppl     5.60 
+| epoch   8 | 3200/5112 batches | lr 0.075000 | ms/batch  12.3 | loss  1.71 | ppl     5.51 
+| epoch   8 | 3400/5112 batches | lr 0.075000 | ms/batch  12.3 | loss  1.69 | ppl     5.42 
+| epoch   8 | 3600/5112 batches | lr 0.075000 | ms/batch  12.4 | loss  1.70 | ppl     5.46 
+| epoch   8 | 3800/5112 batches | lr 0.075000 | ms/batch  12.5 | loss  1.72 | ppl     5.56 
+| epoch   8 | 4000/5112 batches | lr 0.075000 | ms/batch  12.5 | loss  1.71 | ppl     5.53 
+| epoch   8 | 4200/5112 batches | lr 0.075000 | ms/batch  12.3 | loss  1.71 | ppl     5.52 
+| epoch   8 | 4400/5112 batches | lr 0.075000 | ms/batch  12.2 | loss  1.70 | ppl     5.46 
+| epoch   8 | 4600/5112 batches | lr 0.075000 | ms/batch  12.4 | loss  1.71 | ppl     5.53 
+| epoch   8 | 4800/5112 batches | lr 0.075000 | ms/batch  12.3 | loss  1.70 | ppl     5.46 
+| epoch   8 | 5000/5112 batches | lr 0.075000 | ms/batch  12.3 | loss  1.71 | ppl     5.55 
+=========================================================================================
+===> [SRC]  rb : unser <unk> argumentierte , dass es tatsächlich &quot; vergiss den priester , hier sind die sex <unk> &quot; heißt .
+===> [REF]  rb : so our key witness argued that it was actually &quot; never mind the priest , here &apos;s the sex pistols . &quot;
+===> [HYP]  rb : in fact , our <unk> <unk> that it &apos;s actually &quot; forget the priest , here are the sex <unk> . &quot;
+PPL 9.985 | BLEU = 28.102, 64.4/37.1/23.2/14.8, hyp_len=120576, ref_len=128959
+Save model with PPL 9.985 BLEU 28.102
+=========================================================================================
+| epoch   9 |  200/5112 batches | lr 0.075000 | ms/batch  12.5 | loss  1.64 | ppl     5.16 
+| epoch   9 |  400/5112 batches | lr 0.075000 | ms/batch  12.5 | loss  1.64 | ppl     5.15 
+| epoch   9 |  600/5112 batches | lr 0.075000 | ms/batch  12.6 | loss  1.66 | ppl     5.28 
+| epoch   9 |  800/5112 batches | lr 0.075000 | ms/batch  12.5 | loss  1.66 | ppl     5.24 
+| epoch   9 | 1000/5112 batches | lr 0.075000 | ms/batch  12.5 | loss  1.64 | ppl     5.18 
+| epoch   9 | 1200/5112 batches | lr 0.075000 | ms/batch  12.2 | loss  1.66 | ppl     5.27 
+| epoch   9 | 1400/5112 batches | lr 0.075000 | ms/batch  12.4 | loss  1.67 | ppl     5.32 
+| epoch   9 | 1600/5112 batches | lr 0.075000 | ms/batch  12.3 | loss  1.66 | ppl     5.26 
+| epoch   9 | 1800/5112 batches | lr 0.075000 | ms/batch  12.4 | loss  1.67 | ppl     5.29 
+| epoch   9 | 2000/5112 batches | lr 0.075000 | ms/batch  12.3 | loss  1.66 | ppl     5.28 
+| epoch   9 | 2200/5112 batches | lr 0.075000 | ms/batch  12.3 | loss  1.67 | ppl     5.30 
+| epoch   9 | 2400/5112 batches | lr 0.075000 | ms/batch  12.4 | loss  1.65 | ppl     5.18 
+| epoch   9 | 2600/5112 batches | lr 0.075000 | ms/batch  12.6 | loss  1.67 | ppl     5.29 
+| epoch   9 | 2800/5112 batches | lr 0.075000 | ms/batch  12.5 | loss  1.68 | ppl     5.37 
+| epoch   9 | 3000/5112 batches | lr 0.075000 | ms/batch  12.5 | loss  1.68 | ppl     5.37 
+| epoch   9 | 3200/5112 batches | lr 0.075000 | ms/batch  12.5 | loss  1.67 | ppl     5.32 
+| epoch   9 | 3400/5112 batches | lr 0.075000 | ms/batch  12.3 | loss  1.66 | ppl     5.27 
+| epoch   9 | 3600/5112 batches | lr 0.075000 | ms/batch  12.3 | loss  1.66 | ppl     5.26 
+| epoch   9 | 3800/5112 batches | lr 0.075000 | ms/batch  12.4 | loss  1.68 | ppl     5.37 
+| epoch   9 | 4000/5112 batches | lr 0.075000 | ms/batch  12.3 | loss  1.67 | ppl     5.32 
+| epoch   9 | 4200/5112 batches | lr 0.075000 | ms/batch  12.4 | loss  1.70 | ppl     5.45 
+| epoch   9 | 4400/5112 batches | lr 0.075000 | ms/batch  12.4 | loss  1.70 | ppl     5.47 
+| epoch   9 | 4600/5112 batches | lr 0.075000 | ms/batch  12.4 | loss  1.67 | ppl     5.32 
+| epoch   9 | 4800/5112 batches | lr 0.075000 | ms/batch  12.4 | loss  1.68 | ppl     5.38 
+| epoch   9 | 5000/5112 batches | lr 0.075000 | ms/batch  12.5 | loss  1.68 | ppl     5.34 
+=========================================================================================
+===> [SRC]  rb : nein
+===> [REF]  rb : no .
+===> [HYP]  rb : no .
+PPL 10.074 | BLEU = 28.093, 64.7/37.3/23.4/15.0, hyp_len=119659, ref_len=128959
+Curr: 10.074 28.093, Best: 9.985 28.102. Anneal the learning rate 0.075000 --> 0.037500
+=========================================================================================
+| epoch  10 |  200/5112 batches | lr 0.037500 | ms/batch  12.5 | loss  1.61 | ppl     5.00 
+| epoch  10 |  400/5112 batches | lr 0.037500 | ms/batch  12.4 | loss  1.60 | ppl     4.94 
+| epoch  10 |  600/5112 batches | lr 0.037500 | ms/batch  12.5 | loss  1.60 | ppl     4.95 
+| epoch  10 |  800/5112 batches | lr 0.037500 | ms/batch  12.5 | loss  1.63 | ppl     5.12 
+| epoch  10 | 1000/5112 batches | lr 0.037500 | ms/batch  12.7 | loss  1.63 | ppl     5.10 
+| epoch  10 | 1200/5112 batches | lr 0.037500 | ms/batch  12.4 | loss  1.61 | ppl     5.01 
+| epoch  10 | 1400/5112 batches | lr 0.037500 | ms/batch  12.5 | loss  1.61 | ppl     4.99 
+| epoch  10 | 1600/5112 batches | lr 0.037500 | ms/batch  12.4 | loss  1.61 | ppl     5.02 
+| epoch  10 | 1800/5112 batches | lr 0.037500 | ms/batch  12.5 | loss  1.62 | ppl     5.07 
+| epoch  10 | 2000/5112 batches | lr 0.037500 | ms/batch  12.6 | loss  1.60 | ppl     4.95 
+| epoch  10 | 2200/5112 batches | lr 0.037500 | ms/batch  12.5 | loss  1.61 | ppl     5.00 
+| epoch  10 | 2400/5112 batches | lr 0.037500 | ms/batch  12.5 | loss  1.62 | ppl     5.07 
+| epoch  10 | 2600/5112 batches | lr 0.037500 | ms/batch  12.6 | loss  1.63 | ppl     5.11 
+| epoch  10 | 2800/5112 batches | lr 0.037500 | ms/batch  12.6 | loss  1.63 | ppl     5.10 
+| epoch  10 | 3000/5112 batches | lr 0.037500 | ms/batch  12.5 | loss  1.64 | ppl     5.14 
+| epoch  10 | 3200/5112 batches | lr 0.037500 | ms/batch  12.5 | loss  1.63 | ppl     5.10 
+| epoch  10 | 3400/5112 batches | lr 0.037500 | ms/batch  12.6 | loss  1.62 | ppl     5.07 
+| epoch  10 | 3600/5112 batches | lr 0.037500 | ms/batch  12.5 | loss  1.63 | ppl     5.09 
+| epoch  10 | 3800/5112 batches | lr 0.037500 | ms/batch  12.4 | loss  1.63 | ppl     5.11 
+| epoch  10 | 4000/5112 batches | lr 0.037500 | ms/batch  12.5 | loss  1.61 | ppl     5.01 
+| epoch  10 | 4200/5112 batches | lr 0.037500 | ms/batch  12.4 | loss  1.62 | ppl     5.03 
+| epoch  10 | 4400/5112 batches | lr 0.037500 | ms/batch  12.6 | loss  1.63 | ppl     5.13 
+| epoch  10 | 4600/5112 batches | lr 0.037500 | ms/batch  12.5 | loss  1.61 | ppl     5.00 
+| epoch  10 | 4800/5112 batches | lr 0.037500 | ms/batch  12.6 | loss  1.64 | ppl     5.17 
+| epoch  10 | 5000/5112 batches | lr 0.037500 | ms/batch  12.5 | loss  1.64 | ppl     5.17 
+=========================================================================================
+===> [SRC]  rb : nein
+===> [REF]  rb : no .
+===> [HYP]  rb : no .
+PPL 10.131 | BLEU = 28.215, 64.6/37.4/23.4/15.0, hyp_len=120100, ref_len=128959
+Save model with PPL 10.131 BLEU 28.215
+=========================================================================================
+| epoch  11 |  200/5112 batches | lr 0.037500 | ms/batch  12.3 | loss  1.57 | ppl     4.83 
+| epoch  11 |  400/5112 batches | lr 0.037500 | ms/batch  12.2 | loss  1.58 | ppl     4.84 
+| epoch  11 |  600/5112 batches | lr 0.037500 | ms/batch  12.3 | loss  1.59 | ppl     4.89 
+| epoch  11 |  800/5112 batches | lr 0.037500 | ms/batch  12.2 | loss  1.60 | ppl     4.97 
+| epoch  11 | 1000/5112 batches | lr 0.037500 | ms/batch  12.5 | loss  1.59 | ppl     4.91 
+| epoch  11 | 1200/5112 batches | lr 0.037500 | ms/batch  13.9 | loss  1.60 | ppl     4.96 
+| epoch  11 | 1400/5112 batches | lr 0.037500 | ms/batch  12.4 | loss  1.59 | ppl     4.91 
+| epoch  11 | 1600/5112 batches | lr 0.037500 | ms/batch  12.8 | loss  1.58 | ppl     4.87 
+| epoch  11 | 1800/5112 batches | lr 0.037500 | ms/batch  12.3 | loss  1.60 | ppl     4.93 
+| epoch  11 | 2000/5112 batches | lr 0.037500 | ms/batch  12.4 | loss  1.61 | ppl     4.98 
+| epoch  11 | 2200/5112 batches | lr 0.037500 | ms/batch  12.3 | loss  1.61 | ppl     5.01 
+| epoch  11 | 2400/5112 batches | lr 0.037500 | ms/batch  12.3 | loss  1.59 | ppl     4.89 
+| epoch  11 | 2600/5112 batches | lr 0.037500 | ms/batch  12.4 | loss  1.61 | ppl     5.02 
+| epoch  11 | 2800/5112 batches | lr 0.037500 | ms/batch  12.6 | loss  1.62 | ppl     5.07 
+| epoch  11 | 3000/5112 batches | lr 0.037500 | ms/batch  12.4 | loss  1.62 | ppl     5.03 
+| epoch  11 | 3200/5112 batches | lr 0.037500 | ms/batch  12.4 | loss  1.61 | ppl     5.01 
+| epoch  11 | 3400/5112 batches | lr 0.037500 | ms/batch  12.4 | loss  1.61 | ppl     5.02 
+| epoch  11 | 3600/5112 batches | lr 0.037500 | ms/batch  12.6 | loss  1.63 | ppl     5.11 
+| epoch  11 | 3800/5112 batches | lr 0.037500 | ms/batch  12.6 | loss  1.62 | ppl     5.08 
+| epoch  11 | 4000/5112 batches | lr 0.037500 | ms/batch  12.4 | loss  1.61 | ppl     5.01 
+| epoch  11 | 4200/5112 batches | lr 0.037500 | ms/batch  12.4 | loss  1.63 | ppl     5.11 
+| epoch  11 | 4400/5112 batches | lr 0.037500 | ms/batch  12.2 | loss  1.61 | ppl     5.02 
+| epoch  11 | 4600/5112 batches | lr 0.037500 | ms/batch  12.3 | loss  1.62 | ppl     5.04 
+| epoch  11 | 4800/5112 batches | lr 0.037500 | ms/batch  12.4 | loss  1.61 | ppl     5.02 
+| epoch  11 | 5000/5112 batches | lr 0.037500 | ms/batch  12.4 | loss  1.61 | ppl     5.01 
+=========================================================================================
+===> [SRC]  nein , ich möchte mein leben in aller fülle leben .
+===> [REF]  no , i just want to live life to its full .
+===> [HYP]  no , i want my life to live in all my life .
+PPL 10.195 | BLEU = 28.207, 64.6/37.3/23.4/15.0, hyp_len=120211, ref_len=128959
+Curr: 10.195 28.207, Best: 10.131 28.215. Anneal the learning rate 0.037500 --> 0.018750
+=========================================================================================
+| epoch  12 |  200/5112 batches | lr 0.018750 | ms/batch  12.4 | loss  1.59 | ppl     4.89 
+| epoch  12 |  400/5112 batches | lr 0.018750 | ms/batch  12.4 | loss  1.58 | ppl     4.86 
+| epoch  12 |  600/5112 batches | lr 0.018750 | ms/batch  12.4 | loss  1.57 | ppl     4.79 
+| epoch  12 |  800/5112 batches | lr 0.018750 | ms/batch  12.4 | loss  1.57 | ppl     4.81 
+| epoch  12 | 1000/5112 batches | lr 0.018750 | ms/batch  12.4 | loss  1.58 | ppl     4.86 
+| epoch  12 | 1200/5112 batches | lr 0.018750 | ms/batch  12.5 | loss  1.58 | ppl     4.85 
+| epoch  12 | 1400/5112 batches | lr 0.018750 | ms/batch  12.5 | loss  1.58 | ppl     4.87 
+| epoch  12 | 1600/5112 batches | lr 0.018750 | ms/batch  12.5 | loss  1.59 | ppl     4.89 
+| epoch  12 | 1800/5112 batches | lr 0.018750 | ms/batch  12.5 | loss  1.57 | ppl     4.81 
+| epoch  12 | 2000/5112 batches | lr 0.018750 | ms/batch  12.4 | loss  1.57 | ppl     4.82 
+| epoch  12 | 2200/5112 batches | lr 0.018750 | ms/batch  12.3 | loss  1.57 | ppl     4.79 
+| epoch  12 | 2400/5112 batches | lr 0.018750 | ms/batch  12.5 | loss  1.60 | ppl     4.95 
+| epoch  12 | 2600/5112 batches | lr 0.018750 | ms/batch  12.4 | loss  1.59 | ppl     4.90 
+| epoch  12 | 2800/5112 batches | lr 0.018750 | ms/batch  12.4 | loss  1.57 | ppl     4.83 
+| epoch  12 | 3000/5112 batches | lr 0.018750 | ms/batch  12.2 | loss  1.58 | ppl     4.85 
+| epoch  12 | 3200/5112 batches | lr 0.018750 | ms/batch  12.5 | loss  1.57 | ppl     4.79 
+| epoch  12 | 3400/5112 batches | lr 0.018750 | ms/batch  12.5 | loss  1.58 | ppl     4.87 
+| epoch  12 | 3600/5112 batches | lr 0.018750 | ms/batch  12.5 | loss  1.59 | ppl     4.91 
+| epoch  12 | 3800/5112 batches | lr 0.018750 | ms/batch  12.4 | loss  1.59 | ppl     4.88 
+| epoch  12 | 4000/5112 batches | lr 0.018750 | ms/batch  12.5 | loss  1.60 | ppl     4.93 
+| epoch  12 | 4200/5112 batches | lr 0.018750 | ms/batch  12.3 | loss  1.58 | ppl     4.83 
+| epoch  12 | 4400/5112 batches | lr 0.018750 | ms/batch  12.3 | loss  1.57 | ppl     4.80 
+| epoch  12 | 4600/5112 batches | lr 0.018750 | ms/batch  12.3 | loss  1.59 | ppl     4.91 
+| epoch  12 | 4800/5112 batches | lr 0.018750 | ms/batch  12.3 | loss  1.59 | ppl     4.89 
+| epoch  12 | 5000/5112 batches | lr 0.018750 | ms/batch  12.4 | loss  1.60 | ppl     4.93 
+=========================================================================================
+===> [SRC]  nein , ich möchte mein leben in aller fülle leben .
+===> [REF]  no , i just want to live life to its full .
+===> [HYP]  no , i want my life to live in all my life .
+PPL 10.248 | BLEU = 28.208, 64.7/37.4/23.4/15.1, hyp_len=119990, ref_len=128959
+Curr: 10.248 28.208, Best: 10.131 28.215. Anneal the learning rate 0.018750 --> 0.009375
+=========================================================================================
+| epoch  13 |  200/5112 batches | lr 0.009375 | ms/batch  12.2 | loss  1.56 | ppl     4.78 
+| epoch  13 |  400/5112 batches | lr 0.009375 | ms/batch  12.2 | loss  1.56 | ppl     4.77 
+| epoch  13 |  600/5112 batches | lr 0.009375 | ms/batch  12.3 | loss  1.57 | ppl     4.80 
+| epoch  13 |  800/5112 batches | lr 0.009375 | ms/batch  12.4 | loss  1.57 | ppl     4.80 
+| epoch  13 | 1000/5112 batches | lr 0.009375 | ms/batch  12.4 | loss  1.58 | ppl     4.86 
+| epoch  13 | 1200/5112 batches | lr 0.009375 | ms/batch  12.2 | loss  1.55 | ppl     4.73 
+| epoch  13 | 1400/5112 batches | lr 0.009375 | ms/batch  12.3 | loss  1.56 | ppl     4.76 
+| epoch  13 | 1600/5112 batches | lr 0.009375 | ms/batch  12.3 | loss  1.57 | ppl     4.80 
+| epoch  13 | 1800/5112 batches | lr 0.009375 | ms/batch  12.2 | loss  1.55 | ppl     4.70 
+| epoch  13 | 2000/5112 batches | lr 0.009375 | ms/batch  12.4 | loss  1.58 | ppl     4.84 
+| epoch  13 | 2200/5112 batches | lr 0.009375 | ms/batch  12.3 | loss  1.55 | ppl     4.71 
+| epoch  13 | 2400/5112 batches | lr 0.009375 | ms/batch  12.4 | loss  1.58 | ppl     4.86 
+| epoch  13 | 2600/5112 batches | lr 0.009375 | ms/batch  12.3 | loss  1.55 | ppl     4.71 
+| epoch  13 | 2800/5112 batches | lr 0.009375 | ms/batch  12.4 | loss  1.59 | ppl     4.91 
+| epoch  13 | 3000/5112 batches | lr 0.009375 | ms/batch  12.2 | loss  1.55 | ppl     4.73 
+| epoch  13 | 3200/5112 batches | lr 0.009375 | ms/batch  12.3 | loss  1.58 | ppl     4.87 
+| epoch  13 | 3400/5112 batches | lr 0.009375 | ms/batch  12.3 | loss  1.56 | ppl     4.75 
+| epoch  13 | 3600/5112 batches | lr 0.009375 | ms/batch  12.3 | loss  1.58 | ppl     4.86 
+| epoch  13 | 3800/5112 batches | lr 0.009375 | ms/batch  12.2 | loss  1.57 | ppl     4.82 
+| epoch  13 | 4000/5112 batches | lr 0.009375 | ms/batch  12.3 | loss  1.58 | ppl     4.85 
+| epoch  13 | 4200/5112 batches | lr 0.009375 | ms/batch  12.2 | loss  1.57 | ppl     4.80 
+| epoch  13 | 4400/5112 batches | lr 0.009375 | ms/batch  12.3 | loss  1.56 | ppl     4.76 
+| epoch  13 | 4600/5112 batches | lr 0.009375 | ms/batch  12.3 | loss  1.57 | ppl     4.80 
+| epoch  13 | 4800/5112 batches | lr 0.009375 | ms/batch  12.2 | loss  1.56 | ppl     4.75 
+| epoch  13 | 5000/5112 batches | lr 0.009375 | ms/batch  12.3 | loss  1.57 | ppl     4.78 
+=========================================================================================
+===> [SRC]  rb : unser <unk> argumentierte , dass es tatsächlich &quot; vergiss den priester , hier sind die sex <unk> &quot; heißt .
+===> [REF]  rb : so our key witness argued that it was actually &quot; never mind the priest , here &apos;s the sex pistols . &quot;
+===> [HYP]  rb : in fact , our <unk> <unk> that it &apos;s actually &quot; forget the priest , here are the sex <unk> . &quot;
+PPL 10.282 | BLEU = 28.137, 64.6/37.3/23.3/15.0, hyp_len=120136, ref_len=128959
+=========================================================================================
+Exiting from the learning rate being too small.
+Best dev bleu 28.215
+=========================================================================================
+===> [SRC]  sie fügen einen blauen an einen grünen , und sie können licht machen .
+===> [REF]  you put a blue to a green , you can make light .
+===> [HYP]  they add a blue one on a green , and they can make light .
+PPL 10.493 | BLEU = 27.260, 63.3/35.9/22.2/14.1, hyp_len=109667, ref_len=116542
