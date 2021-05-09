@@ -365,7 +365,7 @@ def evaluate(iterator):
 def save_eval_results(iterator, src_fname, ref_fname, hyp_fname):
     actor.eval()
     sum_nll, cnt_nll = 0, 0
-    with open(src_fname, 'w') as src_file, open(ref_fname, 'w') as ref_file, open(hyp_fname, 'w') as hyp_file
+    with open(src_fname, 'w') as src_file, open(ref_fname, 'w') as ref_file, open(hyp_fname, 'w') as hyp_file:
         for batch, (src, tgt) in enumerate(iterator, start=1):
             # get hyp
             hyps, _ = actor.generate(src, k=args.beamsize, n=1)
